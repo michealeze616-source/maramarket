@@ -11,6 +11,9 @@
         content="MaraMarket — Buy, sell and connect with people around you."
     >
 
+    <!-- Supabase JavaScript library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
         * {
             box-sizing: border-box;
@@ -202,7 +205,7 @@
             font-weight: 700;
         }
 
-        /* GENERAL SECTIONS */
+        /* SECTIONS */
 
         section {
             width: 90%;
@@ -332,7 +335,7 @@
             font-size: 13px;
         }
 
-        /* CUSTOMER SERVICE */
+        /* SUPPORT */
 
         .support {
             padding: 35px 25px;
@@ -405,7 +408,7 @@
             color: #5e6c84;
         }
 
-        /* MOBILE BOTTOM NAV */
+        /* MOBILE NAV */
 
         .mobile-nav {
             display: none;
@@ -543,18 +546,22 @@
         </a>
 
         <nav>
+
             <a href="index.html">Home</a>
+
             <a href="#categories">Browse</a>
+
             <a href="#favorites">Favorites</a>
+
             <a href="#messages">Messages</a>
+
             <a href="#account">Account</a>
 
             <a href="sell.html" class="sell-button">
                 ＋ Sell Item
             </a>
-        </nav>
 
-        <!-- Mobile/Tablet Sell Button -->
+        </nav>
 
         <a href="sell.html" class="sell-button">
             ＋ Sell
@@ -677,9 +684,6 @@
 
             <div class="listings" id="listingContainer">
 
-                <!-- Temporary demo listings.
-                     These will later be loaded from the database. -->
-
                 <article class="listing-card">
 
                     <div class="listing-image">
@@ -784,14 +788,12 @@
         </section>
 
 
-        <!-- FUTURE FAVORITES -->
+        <!-- FAVORITES -->
 
         <section id="favorites">
 
             <div class="section-title">
-
                 <h2>Favorites</h2>
-
             </div>
 
             <div class="support">
@@ -812,14 +814,12 @@
         </section>
 
 
-        <!-- FUTURE MESSAGES -->
+        <!-- MESSAGES -->
 
         <section id="messages">
 
             <div class="section-title">
-
                 <h2>Messages</h2>
-
             </div>
 
             <div class="support">
@@ -839,14 +839,12 @@
         </section>
 
 
-        <!-- FUTURE ACCOUNT -->
+        <!-- ACCOUNT -->
 
         <section id="account">
 
             <div class="section-title">
-
                 <h2>Account</h2>
-
             </div>
 
             <div class="support">
@@ -959,27 +957,59 @@
     </div>
 
 
-    <!-- JAVASCRIPT -->
+    <!-- MARA MARKET / SUPABASE CONNECTION -->
 
     <script>
 
         /*
-         * MaraMarket frontend foundation.
+         * =====================================================
+         * MARA MARKET BACKEND CONFIGURATION
+         * =====================================================
          *
-         * Later these functions can be connected to:
-         * - User authentication
-         * - Database
-         * - Product listings
-         * - Image storage
-         * - Messaging
-         * - Notifications
-         * - Favorites
-         * - Payments
-         * - Seller dashboard
-         * - Admin dashboard
+         * These are TEST credentials supplied for development.
+         *
+         * When we're ready to connect your real project,
+         * replace ONLY these two values with your real
+         * Supabase Project URL and Publishable Key.
+         *
+         * NEVER put a Supabase secret/service-role key here.
          */
 
-        function searchMarketplace() {
+        const SUPABASE_URL =
+            "https://hakjsjmexinuiwhxejva.supabase.co";
+
+        const SUPABASE_PUBLISHABLE_KEY =
+            "sb_publishable_OjO3jp9ZlV0N2WHHBddN8g_rryvMoAL";
+
+
+        /*
+         * Create the Supabase client.
+         */
+
+        let supabaseClient = null;
+
+        if (
+            typeof window.supabase !== "undefined" &&
+            SUPABASE_URL &&
+            SUPABASE_PUBLISHABLE_KEY
+        ) {
+
+            supabaseClient =
+                window.supabase.createClient(
+                    SUPABASE_URL,
+                    SUPABASE_PUBLISHABLE_KEY
+                );
+
+        }
+
+
+        /*
+         * =====================================================
+         * SEARCH
+         * =====================================================
+         */
+
+        async function searchMarketplace() {
 
             const input =
                 document.getElementById("searchInput");
@@ -988,85 +1018,216 @@
                 input.value.trim();
 
             if (!searchText) {
+
                 alert("Please enter something to search.");
+
                 return;
             }
 
             /*
-             * Database search will be connected here later.
+             * Real database search will be connected here.
+             */
+
+            if (!supabaseClient) {
+
+                alert("MaraMarket backend is not connected.");
+
+                return;
+            }
+
+            console.log(
+                "Searching MaraMarket for:",
+                searchText
+            );
+
+            /*
+             * Listing search will be implemented after
+             * authentication and database connection are tested.
              */
 
             alert(
-                "Marketplace search for: " +
-                searchText +
-                "\n\nSearch system will be connected to the marketplace database next."
+                "Search system is connected to the MaraMarket backend foundation.\n\n" +
+                "Real listing search will be added next."
             );
         }
 
 
         /*
-         * Allow pressing Enter inside the search box.
+         * Press Enter to search.
          */
 
         document
             .getElementById("searchInput")
-            .addEventListener("keydown", function(event) {
+            .addEventListener(
+                "keydown",
+                function(event) {
 
-                if (event.key === "Enter") {
-                    searchMarketplace();
+                    if (event.key === "Enter") {
+
+                        searchMarketplace();
+
+                    }
+
                 }
-
-            });
+            );
 
 
         /*
-         * Future listing loader.
-         *
-         * Later this will fetch real listings from the database.
+         * =====================================================
+         * FUTURE LISTINGS
+         * =====================================================
          */
 
         async function loadListings() {
 
-            // Database connection will be added here.
+            if (!supabaseClient) {
+
+                console.error(
+                    "Supabase client is not available."
+                );
+
+                return;
+            }
+
+            /*
+             * Real listings will be loaded here.
+             *
+             * Example future flow:
+             *
+             * const { data, error } =
+             * await supabaseClient
+             *     .from("listings")
+             *     .select("*")
+             *     .eq("status", "active");
+             */
 
         }
 
 
         /*
-         * Future authentication state.
+         * =====================================================
+         * FUTURE USER SESSION
+         * =====================================================
          */
 
-        function checkUserSession() {
+        async function checkUserSession() {
 
-            // Login/authentication system will be connected here.
+            if (!supabaseClient) {
+                return;
+            }
+
+            /*
+             * Authentication will be connected here.
+             */
+
+            const {
+                data: {
+                    session
+                }
+            } =
+                await supabaseClient.auth.getSession();
+
+            if (session) {
+
+                console.log(
+                    "MaraMarket user session found."
+                );
+
+            } else {
+
+                console.log(
+                    "No MaraMarket user is currently signed in."
+                );
+
+            }
 
         }
 
 
         /*
-         * Future notification system.
+         * =====================================================
+         * FUTURE NOTIFICATIONS
+         * =====================================================
          */
 
-        function loadNotifications() {
+        async function loadNotifications() {
 
-            // Notification system will be connected here.
+            if (!supabaseClient) {
+                return;
+            }
+
+            /*
+             * Notification system will be connected here.
+             */
 
         }
 
 
         /*
-         * Start MaraMarket frontend.
+         * =====================================================
+         * BACKEND CONNECTION TEST
+         * =====================================================
          */
 
-        document.addEventListener("DOMContentLoaded", function() {
+        async function testBackendConnection() {
 
-            checkUserSession();
+            if (!supabaseClient) {
 
-            loadListings();
+                console.error(
+                    "Supabase client failed to initialize."
+                );
 
-            loadNotifications();
+                return false;
+            }
 
-        });
+            const {
+                data,
+                error
+            } =
+                await supabaseClient
+                    .from("categories")
+                    .select("id, name, slug")
+                    .limit(1);
+
+            if (error) {
+
+                console.error(
+                    "MaraMarket backend connection error:",
+                    error.message
+                );
+
+                return false;
+            }
+
+            console.log(
+                "MaraMarket backend connection successful.",
+                data
+            );
+
+            return true;
+        }
+
+
+        /*
+         * =====================================================
+         * START MARA MARKET
+         * =====================================================
+         */
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            async function() {
+
+                await testBackendConnection();
+
+                await checkUserSession();
+
+                await loadListings();
+
+                await loadNotifications();
+
+            }
+        );
 
     </script>
 
