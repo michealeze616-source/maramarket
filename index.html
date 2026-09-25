@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MaraMarket — Buy. Sell. Connect.</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #eef6ff;
+            color: #102a43;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, #0757c9, #168cff);
+            color: white;
+            padding: 18px 6%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        nav {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .sell-button {
+            background: white;
+            color: #0757c9;
+            border: none;
+            padding: 11px 18px;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* HERO */
+        .hero {
+            min-height: 420px;
+            padding: 70px 6%;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 85% 20%, #8cc8ff 0, transparent 25%),
+                radial-gradient(circle at 10% 80%, #b8ddff 0, transparent 30%),
+                linear-gradient(135deg, #eaf5ff, #ffffff);
+        }
+
+        .hero-content {
+            max-width: 700px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: clamp(40px, 7vw, 70px);
+            line-height: 1;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 span {
+            color: #0878ed;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: #52667a;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        /* SEARCH */
+        .search-box {
+            background: white;
+            padding: 10px;
+            border-radius: 18px;
+            display: flex;
+            max-width: 700px;
+            box-shadow: 0 15px 40px rgba(20, 90, 160, 0.15);
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 15px;
+            font-size: 16px;
+        }
+
+        .search-box button {
+            background: #0878ed;
+            color: white;
+            border: none;
+            padding: 0 25px;
+            border-radius: 13px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* CATEGORIES */
+        section {
+            padding: 45px 6%;
+        }
+
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-title h2 {
+            font-size: 27px;
+        }
+
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 15px;
+        }
+
+        .category {
+            background: white;
+            border-radius: 18px;
+            padding: 25px 10px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(20, 90, 160, 0.08);
+            transition: 0.2s;
+        }
+
+        .category:hover {
+            transform: translateY(-5px);
+        }
+
+        .category-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .category strong {
+            display: block;
+        }
+
+        /* LISTINGS */
+        .listings {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(20, 90, 160, 0.09);
+            transition: 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+        }
+
+        .product-image {
+            height: 180px;
+            background: linear-gradient(135deg, #dceeff, #b8dbff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 55px;
+        }
+
+        .card-info {
+            padding: 16px;
+        }
+
+        .card-info h3 {
+            margin-bottom: 8px;
+        }
+
+        .price {
+            color: #0878ed;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .location {
+            color: #718096;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        /* CUSTOMER SERVICE */
+        .support {
+            background: linear-gradient(135deg, #0757c9, #168cff);
+            color: white;
+            border-radius: 25px;
+            padding: 35px;
+            margin: 20px 6% 50px;
+        }
+
+        .support h2 {
+            margin-bottom: 10px;
+        }
+
+        .support p {
+            margin: 8px 0;
+        }
+
+        .support a {
+            color: white;
+            font-weight: bold;
+        }
+
+        /* FOOTER */
+        footer {
+            background: #071d36;
+            color: #cbd5e1;
+            padding: 40px 6%;
+            text-align: center;
+        }
+
+        footer strong {
+            color: white;
+        }
+
+        /* MOBILE NAV */
+        .mobile-nav {
+            display: none;
+        }
+
+        @media (max-width: 700px) {
+
+            header {
+                padding: 15px 5%;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .hero {
+                padding: 55px 5%;
+                min-height: 500px;
+            }
+
+            section {
+                padding: 35px 5%;
+            }
+
+            .search-box {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .search-box button {
+                padding: 15px;
+            }
+
+            .listings {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .product-image {
+                height: 140px;
+            }
+
+            .mobile-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: white;
+                box-shadow: 0 -5px 20px rgba(0,0,0,.12);
+                justify-content: space-around;
+                padding: 10px 5px;
+                z-index: 200;
+            }
+
+            .mobile-nav a {
+                text-decoration: none;
+                color: #52667a;
+                font-size: 12px;
+                text-align: center;
+            }
+
+            .mobile-nav span {
+                display: block;
+                font-size: 21px;
+                margin-bottom: 3px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">🔵 MaraMarket</div>
+
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">Browse</a>
+        <a href="#">Favorites</a>
+        <a href="#">Messages</a>
+        <a href="#">Account</a>
+        <button class="sell-button">＋ Sell Item</button>
+    </nav>
+
+    <button class="sell-button">＋ Sell</button>
+</header>
+
+
+<main>
+
+    <section class="hero">
+        <div class="hero-content">
+
+            <h1>Buy. <span>Sell.</span><br>Connect.</h1>
+
+            <p>
+                Discover great items from people around you,
+                or turn things you no longer need into cash.
+            </p>
+
+            <div class="search-box">
+                <input
+                    type="text"
+                    placeholder="What are you looking for?"
+                >
+
+                <button>🔍 Search</button>
+            </div>
+
+        </div>
+    </section>
+
+
+    <section>
+
+        <div class="section-title">
+            <h2>Explore Categories</h2>
+        </div>
+
+        <div class="categories">
+
+            <div class="category">
+                <div class="category-icon">📱</div>
+                <strong>Phones</strong>
+            </div>
+
+            <div class="category">
+                <div class="category-icon">💻</div>
+                <strong>Electronics</strong>
+            </div>
+
+            <div class="category">
+                <div class="category-icon">👕</div>
+                <strong>Fashion</strong>
+            </div>
+
+            <div class="category">
+                <div class="category-icon">🚗</div>
+                <strong>Vehicles</strong>
+            </div>
+
+            <div class="category">
+                <div class="category-icon">🏠</div>
+                <strong>Property</strong>
+            </div>
+
+            <div class="category">
+                <div class="category-icon">🎮</div>
+                <strong>Gaming</strong>
+            </div>
+
+            <div class="category">
+                <div class="category-icon">💄</div>
+                <strong>Beauty</strong>
+            </div>
+
+            <div class="category">
+                <div class="category-icon">🛠️</div>
+                <strong>Services</strong>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section>
+
+        <div class="section-title">
+            <h2>🔥 Fresh Listings</h2>
+            <a href="#">View All →</a>
+        </div>
+
+        <div class="listings">
+
+            <div class="card">
+                <div class="product-image">📱</div>
+                <div class="card-info">
+                    <h3>iPhone 15 Pro</h3>
+                    <div class="price">₦850,000</div>
+                    <div class="location">📍 Lagos</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="product-image">💻</div>
+                <div class="card-info">
+                    <h3>HP Laptop</h3>
+                    <div class="price">₦350,000</div>
+                    <div class="location">📍 Abuja</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="product-image">👟</div>
+                <div class="card-info">
+                    <h3>Designer Sneakers</h3>
+                    <div class="price">₦75,000</div>
+                    <div class="location">📍 Port Harcourt</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="product-image">🎮</div>
+                <div class="card-info">
+                    <h3>PS5 Console</h3>
+                    <div class="price">₦620,000</div>
+                    <div class="location">📍 Lagos</div>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <div class="support">
+
+        <h2>💬 Need Help?</h2>
+
+        <p>Our customer service team is available to help you.</p>
+
+        <p>
+            WhatsApp:
+            <a href="https://wa.me/2348074314157">
+                08074314157
+            </a>
+        </p>
+
+        <p>
+            Telephone:
+            <a href="tel:08022031720">
+                08022031720
+            </a>
+        </p>
+
+    </div>
+
+</main>
+
+
+<footer>
+
+    <p>
+        <strong>MaraMarket</strong> — Buy. Sell. Connect.
+    </p>
+
+    <br>
+
+    <p>
+        About · Help Center · Safety · Terms · Privacy · Contact
+    </p>
+
+    <br>
+
+    <p>© 2026 MaraMarket. All rights reserved.</p>
+
+</footer>
+
+
+<div class="mobile-nav">
+
+    <a href="#">
+        <span>🏠</span>
+        Home
+    </a>
+
+    <a href="#">
+        <span>🔍</span>
+        Search
+    </a>
+
+    <a href="#">
+        <span>➕</span>
+        Sell
+    </a>
+
+    <a href="#">
+        <span>💬</span>
+        Messages
+    </a>
+
+    <a href="#">
+        <span>👤</span>
+        Account
+    </a>
+
+</div>
+
+</body>
+</html>
