@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sell an Item — MaraMarket</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background:
+                radial-gradient(circle at 10% 10%, #cce7ff, transparent 30%),
+                radial-gradient(circle at 90% 30%, #b8dcff, transparent 30%),
+                #eef6ff;
+            color: #102a43;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, #0757c9, #168cff);
+            color: white;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 800;
+        }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .heading {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .heading h1 {
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        .heading p {
+            color: #627d98;
+        }
+
+        .progress {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .progress div {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #cbdff5;
+            color: #52667a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .progress .active {
+            background: #0878ed;
+            color: white;
+        }
+
+        .card {
+            background: rgba(255,255,255,.92);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 15px 45px rgba(20,90,160,.12);
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        .step h2 {
+            margin-bottom: 10px;
+        }
+
+        .step-description {
+            color: #627d98;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin: 18px 0 8px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #d3e2f2;
+            border-radius: 12px;
+            outline: none;
+            font-size: 15px;
+            background: white;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #0878ed;
+        }
+
+        textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        .photo-box {
+            border: 2px dashed #8fc5f7;
+            border-radius: 18px;
+            padding: 35px 20px;
+            text-align: center;
+            background: #f3f9ff;
+        }
+
+        .photo-box .icon {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+
+        .photo-box input {
+            border: none;
+            background: transparent;
+        }
+
+        .required {
+            color: #e63946;
+        }
+
+        .optional {
+            color: #718096;
+            font-weight: normal;
+            font-size: 13px;
+        }
+
+        .fee {
+            background: #eaf5ff;
+            border-radius: 18px;
+            padding: 22px;
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .fee small {
+            color: #627d98;
+        }
+
+        .fee strong {
+            display: block;
+            font-size: 32px;
+            color: #0878ed;
+            margin-top: 8px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        button {
+            border: none;
+            border-radius: 12px;
+            padding: 14px 22px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .back {
+            background: #e5eef8;
+            color: #31526e;
+        }
+
+        .next,
+        .publish {
+            background: linear-gradient(135deg, #0757c9, #168cff);
+            color: white;
+            margin-left: auto;
+        }
+
+        .preview {
+            background: #f6faff;
+            border-radius: 18px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .preview-row {
+            padding: 12px 0;
+            border-bottom: 1px solid #dce8f3;
+        }
+
+        .preview-row:last-child {
+            border-bottom: none;
+        }
+
+        .preview-label {
+            color: #718096;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .whatsapp-note {
+            background: #eafaf0;
+            color: #24613b;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 15px;
+            line-height: 1.5;
+        }
+
+        @media(max-width:600px) {
+            .container {
+                margin: 25px auto;
+            }
+
+            .card {
+                padding: 22px;
+            }
+
+            .heading h1 {
+                font-size: 28px;
+            }
+
+            .progress div {
+                width: 30px;
+                height: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">🔵 MaraMarket</div>
+    <a href="index.html">← Back Home</a>
+</header>
+
+
+<div class="container">
+
+    <div class="heading">
+        <h1>Sell an Item</h1>
+        <p>Reach buyers on MaraMarket</p>
+    </div>
+
+
+    <div class="progress">
+        <div class="active" id="p1">1</div>
+        <div id="p2">2</div>
+        <div id="p3">3</div>
+        <div id="p4">4</div>
+    </div>
+
+
+    <div class="card">
+
+        <!-- STEP 1 -->
+
+        <div class="step active" id="step1">
+
+            <h2>📸 Add Photos</h2>
+
+            <p class="step-description">
+                Good photos help buyers understand what you're selling.
+            </p>
+
+            <div class="photo-box">
+
+                <div class="icon">📷</div>
+
+                <strong>Add up to 10 photos</strong>
+
+                <p style="margin:10px 0;color:#718096;">
+                    Choose clear pictures of your item.
+                </p>
+
+                <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    id="photos"
+                >
+
+            </div>
+
+            <div class="buttons">
+                <button class="next" onclick="nextStep(1)">
+                    Continue →
+                </button>
+            </div>
+
+        </div>
+
+
+        <!-- STEP 2 -->
+
+        <div class="step" id="step2">
+
+            <h2>📝 Item Details</h2>
+
+            <p class="step-description">
+                Tell buyers about the item you're selling.
+            </p>
+
+            <label>Item title</label>
+
+            <input
+                type="text"
+                id="title"
+                placeholder="Example: iPhone 15 Pro Max"
+            >
+
+
+            <label>Category</label>
+
+            <select id="category">
+
+                <option value="">Select a category</option>
+
+                <option>Phones</option>
+                <option>Electronics</option>
+                <option>Fashion</option>
+                <option>Vehicles</option>
+                <option>Property</option>
+                <option>Gaming</option>
+                <option>Beauty</option>
+                <option>Home & Garden</option>
+                <option>Sports</option>
+                <option>Services</option>
+                <option>Other</option>
+
+            </select>
+
+
+            <label>Condition</label>
+
+            <select id="condition">
+
+                <option value="">Select condition</option>
+
+                <option>New</option>
+                <option>Used</option>
+                <option>Refurbished</option>
+
+            </select>
+
+
+            <label>Price (₦)</label>
+
+            <input
+                type="number"
+                id="price"
+                placeholder="Example: 250000"
+            >
+
+
+            <label>Description</label>
+
+            <textarea
+                id="description"
+                placeholder="Describe your item, its condition, features, etc."
+            ></textarea>
+
+
+            <div class="buttons">
+
+                <button class="back" onclick="previousStep(2)">
+                    ← Back
+                </button>
+
+                <button class="next" onclick="nextStep(2)">
+                    Continue →
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- STEP 3 -->
+
+        <div class="step" id="step3">
+
+            <h2>📍 Location & Contact</h2>
+
+            <p class="step-description">
+                Give buyers enough information to contact you.
+            </p>
+
+
+            <label>State</label>
+
+            <select id="state">
+
+                <option value="">Select state</option>
+
+                <option>Abia</option>
+                <option>Adamawa</option>
+                <option>Akwa Ibom</option>
+                <option>Anambra</option>
+                <option>Bauchi</option>
+                <option>Bayelsa</option>
+                <option>Benue</option>
+                <option>Borno</option>
+                <option>Cross River</option>
+                <option>Delta</option>
+                <option>Ebonyi</option>
+                <option>Edo</option>
+                <option>Ekiti</option>
+                <option>Enugu</option>
+                <option>FCT Abuja</option>
+                <option>Gombe</option>
+                <option>Imo</option>
+                <option>Jigawa</option>
+                <option>Kaduna</option>
+                <option>Kano</option>
+                <option>Katsina</option>
+                <option>Kebbi</option>
+                <option>Kogi</option>
+                <option>Kwara</option>
+                <option>Lagos</option>
+                <option>Nasarawa</option>
+                <option>Niger</option>
+                <option>Ogun</option>
+                <option>Ondo</option>
+                <option>Osun</option>
+                <option>Oyo</option>
+                <option>Plateau</option>
+                <option>Rivers</option>
+                <option>Sokoto</option>
+                <option>Taraba</option>
+                <option>Yobe</option>
+                <option>Zamfara</option>
+
+            </select>
+
+
+            <label>City / Area</label>
+
+            <input
+                type="text"
+                id="location"
+                placeholder="Example: Ikeja"
+            >
+
+
+            <label>
+                WhatsApp Number
+                <span class="required">*</span>
+            </label>
+
+            <input
+                type="tel"
+                id="whatsapp"
+                placeholder="08012345678"
+            >
+
+            <div class="whatsapp-note">
+                🟢 A WhatsApp number is required because buyers
+                need a way to contact sellers.
+            </div>
+
+
+            <label>
+                Instagram
+                <span class="optional">(optional)</span>
+            </label>
+
+            <input
+                type="text"
+                id="instagram"
+                placeholder="@yourusername"
+            >
+
+
+            <label>
+                Telegram
+                <span class="optional">(optional)</span>
+            </label>
+
+            <input
+                type="text"
+                id="telegram"
+                placeholder="@yourusername"
+            >
+
+
+            <label>
+                TikTok
+                <span class="optional">(optional)</span>
+            </label>
+
+            <input
+                type="text"
+                id="tiktok"
+                placeholder="@yourusername"
+            >
+
+
+            <div class="buttons">
+
+                <button class="back" onclick="previousStep(3)">
+                    ← Back
+                </button>
+
+                <button class="next" onclick="nextStep(3)">
+                    Preview →
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- STEP 4 -->
+
+        <div class="step" id="step4">
+
+            <h2>👀 Preview Your Listing</h2>
+
+            <p class="step-description">
+                Check everything before continuing to payment.
+            </p>
+
+
+            <div class="preview">
+
+                <div class="preview-row">
+                    <div class="preview-label">Item</div>
+                    <strong id="previewTitle">—</strong>
+                </div>
+
+                <div class="preview-row">
+                    <div class="preview-label">Category</div>
+                    <span id="previewCategory">—</span>
+                </div>
+
+                <div class="preview-row">
+                    <div class="preview-label">Condition</div>
+                    <span id="previewCondition">—</span>
+                </div>
+
+                <div class="preview-row">
+                    <div class="preview-label">Price</div>
+                    <strong id="previewPrice">—</strong>
+                </div>
+
+                <div class="preview-row">
+                    <div class="preview-label">Location</div>
+                    <span id="previewLocation">—</span>
+                </div>
+
+                <div class="preview-row">
+                    <div class="preview-label">WhatsApp</div>
+                    <span id="previewWhatsapp">—</span>
+                </div>
+
+            </div>
+
+
+            <div class="fee">
+
+                <small>Marketplace listing fee</small>
+
+                <strong>₦1,000</strong>
+
+                <p style="margin-top:8px;color:#52667a;">
+                    Payment is required before your listing
+                    can be published.
+                </p>
+
+            </div>
+
+
+            <div class="buttons">
+
+                <button class="back" onclick="previousStep(4)">
+                    ← Edit
+                </button>
+
+                <button class="publish" onclick="startPayment()">
+                    Continue to Payment →
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    let currentStep = 1;
+
+
+    function showStep(step) {
+
+        document.querySelectorAll(".step").forEach(function(element) {
+            element.classList.remove("active");
+        });
+
+        document.getElementById("step" + step).classList.add("active");
+
+
+        document.querySelectorAll(".progress div").forEach(function(element) {
+            element.classList.remove("active");
+        });
+
+        for(let i = 1; i <= step; i++) {
+            document.getElementById("p" + i).classList.add("active");
+        }
+
+        currentStep = step;
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+
+    function nextStep(step) {
+
+        if(step === 1) {
+
+            const photos = document.getElementById("photos");
+
+            if(photos.files.length === 0) {
+                alert("Please add at least one photo.");
+                return;
+            }
+
+            if(photos.files.length > 10) {
+                alert("You can upload a maximum of 10 photos.");
+                return;
+            }
+        }
+
+
+        if(step === 2) {
+
+            const title = document.getElementById("title").value.trim();
+            const category = document.getElementById("category").value;
+            const condition = document.getElementById("condition").value;
+            const price = document.getElementById("price").value;
+            const description = document.getElementById("description").value.trim();
+
+
+            if(!title || !category || !condition || !price || !description) {
+
+                alert("Please complete all item details.");
+
+                return;
+            }
+        }
+
+
+        if(step === 3) {
+
+            const state = document.getElementById("state").value;
+            const location = document.getElementById("location").value.trim();
+            const whatsapp = document.getElementById("whatsapp").value.trim();
+
+
+            if(!state || !location || !whatsapp) {
+
+                alert("State, location and WhatsApp number are required.");
+
+                return;
+            }
+
+
+            updatePreview();
+        }
+
+
+        showStep(step + 1);
+    }
+
+
+    function previousStep(step) {
+
+        showStep(step - 1);
+    }
+
+
+    function updatePreview() {
+
+        document.getElementById("previewTitle").textContent =
+            document.getElementById("title").value;
+
+        document.getElementById("previewCategory").textContent =
+            document.getElementById("category").value;
+
+        document.getElementById("previewCondition").textContent =
+            document.getElementById("condition").value;
+
+        document.getElementById("previewPrice").textContent =
+            "₦" + Number(document.getElementById("price").value).toLocaleString();
+
+        document.getElementById("previewLocation").textContent =
+            document.getElementById("state").value +
+            " — " +
+            document.getElementById("location").value;
+
+        document.getElementById("previewWhatsapp").textContent =
+            document.getElementById("whatsapp").value;
+    }
+
+
+    function startPayment() {
+
+        alert(
+            "Payment system coming next.\n\n" +
+            "Listing fee: ₦1,000\n\n" +
+            "Your listing will only be published after " +
+            "the payment is successfully verified."
+        );
+
+    }
+
+</script>
+
+</body>
+</html>
