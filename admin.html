@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MaraMarket Admin</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f7fb;
+    color: #172033;
+}
+
+header {
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    color: #1769ff;
+    font-size: 23px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.back {
+    color: #1769ff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 25px 16px 60px;
+}
+
+h1 {
+    margin-bottom: 7px;
+}
+
+.subtitle {
+    color: #6b7280;
+    margin-bottom: 25px;
+}
+
+.notice {
+    background: #fff8df;
+    color: #705900;
+    padding: 14px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.listing {
+    background: white;
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,.05);
+}
+
+.top {
+    display: flex;
+    gap: 15px;
+}
+
+.image {
+    width: 110px;
+    height: 100px;
+    border-radius: 10px;
+    background: #edf2f8;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 38px;
+}
+
+.image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.info {
+    flex: 1;
+}
+
+.title {
+    font-size: 19px;
+    font-weight: 750;
+    margin-bottom: 6px;
+}
+
+.price {
+    color: #1769ff;
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 6px;
+}
+
+.location {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.status {
+    display: inline-block;
+    background: #fff0c2;
+    color: #795d00;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-top: 9px;
+}
+
+.buttons {
+    display: flex;
+    gap: 9px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+button {
+    border: none;
+    border-radius: 9px;
+    padding: 11px 15px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.approve {
+    background: #16a34a;
+    color: white;
+}
+
+.reject {
+    background: #ffe7e7;
+    color: #b42318;
+}
+
+.view {
+    background: #eef4ff;
+    color: #1769ff;
+}
+
+.empty,
+.loading,
+.error {
+    background: white;
+    padding: 35px 20px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.error {
+    color: #b42318;
+}
+
+@media(max-width:600px) {
+    .top {
+        align-items: flex-start;
+    }
+
+    .image {
+        width: 85px;
+        height: 80px;
+    }
+
+    .buttons button {
+        flex: 1;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+    <a href="index.html" class="logo">
+        MaraMarket
+    </a>
+
+    <a href="account.html" class="back">
+        Account
+    </a>
+
+</header>
+
+
+<div class="container">
+
+    <h1>Admin Dashboard</h1>
+
+    <p class="subtitle">
+        Review and manage pending listings.
+    </p>
+
+    <div class="notice">
+
+        ⚠️ <strong>Admin area</strong><br>
+
+        Only approve listings after you have confirmed
+        the required payment and checked the listing.
+
+    </div>
+
+
+    <div id="listings">
+        <div class="loading">
+            Loading pending listings...
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+
+const SUPABASE_URL =
+    "https://hakjsjmexinuiwhxejva.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_OjO3jp9ZlV0N2WHHBddN8g_rryvMoAL";
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+const container =
+    document.getElementById("listings");
+
+
+function escapeHtml(value) {
+
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+function formatPrice(price) {
+
+    return "₦" +
+        Number(price || 0)
+        .toLocaleString("en-NG");
+
+}
+
+
+function getImage(listing) {
+
+    if (
+        Array.isArray(listing.image_urls) &&
+        listing.image_urls.length
+    ) {
+
+        return `
+            <img
+                src="${escapeHtml(
+                    listing.image_urls[0]
+                )}"
+                alt=""
+            >
+        `;
+    }
+
+    return "🛍️";
+}
+
+
+/* LOAD PENDING LISTINGS */
+
+async function loadListings() {
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("listings")
+        .select(`
+            id,
+            title,
+            price,
+            state,
+            city,
+            area,
+            status,
+            payment_status,
+            image_urls,
+            created_at
+        `)
+        .eq("status", "pending")
+        .order("created_at", {
+            ascending: false
+        });
+
+
+    if (error) {
+
+        console.error(error);
+
+        container.innerHTML = `
+            <div class="error">
+
+                <h3>
+                    Could not load listings
+                </h3>
+
+                <p style="margin-top:8px;">
+                    ${escapeHtml(error.message)}
+                </p>
+
+            </div>
+        `;
+
+        return;
+    }
+
+
+    if (!data || data.length === 0) {
+
+        container.innerHTML = `
+            <div class="empty">
+
+                <div style="font-size:45px;">
+                    ✅
+                </div>
+
+                <h2 style="margin-top:10px;">
+                    No pending listings
+                </h2>
+
+                <p style="
+                    color:#6b7280;
+                    margin-top:7px;
+                ">
+                    Everything is currently reviewed.
+                </p>
+
+            </div>
+        `;
+
+        return;
+    }
+
+
+    container.innerHTML =
+        data.map(listing => {
+
+            const location =
+                [
+                    listing.area,
+                    listing.city,
+                    listing.state
+                ]
+                .filter(Boolean)
+                .join(", ");
+
+
+            return `
+
+                <div
+                    class="listing"
+                    id="listing-${listing.id}"
+                >
+
+                    <div class="top">
+
+                        <div class="image">
+                            ${getImage(listing)}
+                        </div>
+
+
+                        <div class="info">
+
+                            <div class="title">
+                                ${escapeHtml(
+                                    listing.title
+                                )}
+                            </div>
+
+                            <div class="price">
+                                ${formatPrice(
+                                    listing.price
+                                )}
+                            </div>
+
+                            <div class="location">
+                                📍 ${escapeHtml(
+                                    location ||
+                                    "Location not set"
+                                )}
+                            </div>
+
+                            <span class="status">
+                                ${escapeHtml(
+                                    listing.status
+                                    .toUpperCase()
+                                )}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="buttons">
+
+                        <button
+                            class="view"
+                            onclick="viewListing('${listing.id}')"
+                        >
+                            View Details
+                        </button>
+
+
+                        <button
+                            class="approve"
+                            onclick="approveListing('${listing.id}')"
+                        >
+                            ✓ Approve & Publish
+                        </button>
+
+
+                        <button
+                            class="reject"
+                            onclick="rejectListing('${listing.id}')"
+                        >
+                            Reject
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* VIEW */
+
+function viewListing(id) {
+
+    /*
+     * The public listing page only displays active
+     * listings, so open the listing information here
+     * in a simple alert for now.
+     */
+
+    alert(
+        "Listing ID:\n\n" +
+        id +
+        "\n\n" +
+        "The full admin preview can be added next."
+    );
+
+}
+
+
+/* APPROVE */
+
+async function approveListing(id) {
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to approve this listing?\n\n" +
+            "It will become ACTIVE and appear publicly."
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    const {
+        error
+    } = await supabaseClient
+        .from("listings")
+        .update({
+            status: "active"
+        })
+        .eq("id", id);
+
+
+    if (error) {
+
+        alert(
+            "Could not approve listing:\n\n" +
+            error.message
+        );
+
+        console.error(error);
+
+        return;
+    }
+
+
+    const element =
+        document.getElementById(
+            "listing-" + id
+        );
+
+
+    if (element) {
+        element.remove();
+    }
+
+
+    if (
+        container.children.length === 0
+    ) {
+
+        container.innerHTML = `
+            <div class="empty">
+
+                <div style="font-size:45px;">
+                    ✅
+                </div>
+
+                <h2 style="margin-top:10px;">
+                    No pending listings
+                </h2>
+
+                <p style="
+                    color:#6b7280;
+                    margin-top:7px;
+                ">
+                    Everything is currently reviewed.
+                </p>
+
+            </div>
+        `;
+    }
+
+}
+
+
+/* REJECT */
+
+async function rejectListing(id) {
+
+    const confirmed =
+        confirm(
+            "Reject this listing?"
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    const {
+        error
+    } = await supabaseClient
+        .from("listings")
+        .update({
+            status: "rejected"
+        })
+        .eq("id", id);
+
+
+    if (error) {
+
+        alert(
+            "Could not reject listing:\n\n" +
+            error.message
+        );
+
+        return;
+    }
+
+
+    const element =
+        document.getElementById(
+            "listing-" + id
+        );
+
+
+    if (element) {
+        element.remove();
+    }
+
+}
+
+
+loadListings();
+
+</script>
+
+</body>
+</html>
