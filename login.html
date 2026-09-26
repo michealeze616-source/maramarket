@@ -1,262 +1,374 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - MaraMarket</title>  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - MaraMarket</title>
 
-    body {
-      min-height: 100vh;
-      background: linear-gradient(135deg, #0066ff, #00aaff);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    .card {
-      width: 100%;
-      max-width: 430px;
-      background: rgba(255,255,255,0.96);
-      border-radius: 25px;
-      padding: 32px 25px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-    }
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    .logo {
-      text-align: center;
-      font-size: 32px;
-      font-weight: bold;
-      color: #0066ff;
-      margin-bottom: 5px;
-    }
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0d6efd, #4f8cff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-    .tagline {
-      text-align: center;
-      color: #777;
-      margin-bottom: 28px;
-    }
+        .card {
+            width: 100%;
+            max-width: 430px;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 24px;
+            padding: 30px 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+        }
 
-    h2 {
-      text-align: center;
-      margin-bottom: 22px;
-      color: #222;
-    }
+        .logo {
+            text-align: center;
+            font-size: 30px;
+            font-weight: 800;
+            color: #0d6efd;
+            margin-bottom: 6px;
+        }
 
-    label {
-      display: block;
-      margin: 15px 0 7px;
-      font-weight: 600;
-      color: #333;
-    }
+        .tagline {
+            text-align: center;
+            color: #777;
+            margin-bottom: 28px;
+        }
 
-    input {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      font-size: 16px;
-      outline: none;
-    }
+        h1 {
+            text-align: center;
+            color: #222;
+            margin-bottom: 22px;
+            font-size: 25px;
+        }
 
-    input:focus {
-      border-color: #0066ff;
-    }
+        label {
+            display: block;
+            margin: 14px 0 7px;
+            font-weight: 600;
+            color: #333;
+        }
 
-    button {
-      width: 100%;
-      margin-top: 22px;
-      padding: 15px;
-      border: none;
-      border-radius: 12px;
-      background: #0066ff;
-      color: white;
-      font-size: 17px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+        input {
+            width: 100%;
+            padding: 14px 15px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            font-size: 16px;
+            outline: none;
+        }
 
-    button:disabled {
-      opacity: 0.6;
-    }
+        input:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 3px rgba(13,110,253,0.1);
+        }
 
-    .forgot {
-      display: block;
-      text-align: right;
-      margin-top: 12px;
-      color: #0066ff;
-      text-decoration: none;
-      font-size: 14px;
-    }
+        .login-btn {
+            width: 100%;
+            border: none;
+            padding: 15px;
+            margin-top: 22px;
+            border-radius: 12px;
+            background: #0d6efd;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
 
-    .message {
-      margin-top: 18px;
-      padding: 12px;
-      border-radius: 10px;
-      display: none;
-      text-align: center;
-      font-size: 14px;
-    }
+        .login-btn:disabled {
+            opacity: 0.6;
+        }
 
-    .bottom {
-      text-align: center;
-      margin-top: 25px;
-      color: #666;
-    }
+        .forgot {
+            display: block;
+            text-align: right;
+            margin-top: 12px;
+            color: #0d6efd;
+            text-decoration: none;
+            font-size: 14px;
+        }
 
-    .bottom a {
-      color: #0066ff;
-      text-decoration: none;
-      font-weight: bold;
-    }
+        .message {
+            display: none;
+            margin-top: 16px;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
 
-    .back {
-      display: block;
-      text-align: center;
-      margin-top: 18px;
-      color: #777;
-      text-decoration: none;
-      font-size: 14px;
-    }
-  </style></head><body>  <div class="card"><div class="logo">MaraMarket</div>
-<div class="tagline">Buy. Sell. Connect.</div>
+        .message.error {
+            display: block;
+            background: #ffe8e8;
+            color: #c62828;
+        }
 
-<h2>Welcome Back</h2>
+        .message.success {
+            display: block;
+            background: #e7f8ed;
+            color: #188038;
+        }
 
-<div id="loginForm">
+        .signup {
+            text-align: center;
+            margin-top: 22px;
+            color: #666;
+        }
 
-  <label for="email">Email</label>
-  <input
-    type="email"
-    id="email"
-    placeholder="Enter your email"
-    autocomplete="email"
-  >
+        .signup a {
+            color: #0d6efd;
+            font-weight: 700;
+            text-decoration: none;
+        }
 
-  <label for="password">Password</label>
-  <input
-    type="password"
-    id="password"
-    placeholder="Enter your password"
-    autocomplete="current-password"
-  >
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 18px;
+            color: #777;
+            text-decoration: none;
+            font-size: 14px;
+        }
+    </style>
+</head>
 
-  <a href="#" class="forgot" id="forgotPassword">
-    Forgot password?
-  </a>
+<body>
 
-  <button type="button" id="loginButton">
-    Login
-  </button>
+<div class="card">
+
+    <div class="logo">MaraMarket</div>
+    <div class="tagline">Buy. Sell. Connect.</div>
+
+    <h1>Welcome Back</h1>
+
+    <div id="loginForm">
+
+        <label for="email">Email</label>
+        <input
+            type="email"
+            id="email"
+            placeholder="Enter your email"
+            autocomplete="email"
+        >
+
+        <label for="password">Password</label>
+        <input
+            type="password"
+            id="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+        >
+
+        <button type="button" class="login-btn" id="loginButton">
+            Log In
+        </button>
+
+        <a href="#" class="forgot" id="forgotPassword">
+            Forgot password?
+        </a>
+
+        <div id="message" class="message"></div>
+
+    </div>
+
+    <div class="signup">
+        Don't have an account?
+        <a href="signup.html">Create Account</a>
+    </div>
+
+    <a href="index.html" class="back">← Back to MaraMarket</a>
 
 </div>
 
-<div id="message" class="message"></div>
+<script>
+    const SUPABASE_URL =
+        "https://hakjsjmexinuiwhxejva.supabase.co";
 
-<div class="bottom">
-  Don't have an account?
-  <a href="signup.html">Create Account</a>
-</div>
+    const SUPABASE_KEY =
+        "sb_publishable_OjO3jp9ZlV0N2WHHBddN8g_rryvMoAL";
 
-<a href="index.html" class="back">← Back to MaraMarket</a>
-
-  </div><script>
-
-  const SUPABASE_URL =
-    "https://hakjsjmexinuiwhxejva.supabase.co";
-
-  const SUPABASE_KEY =
-    "sb_publishable_OjO3jp9ZlV0N2WHHBddN8g_rryvMoAL";
-
-  const supabaseClient =
-    supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-  const loginButton = document.getElementById("loginButton");
-  const message = document.getElementById("message");
-
-  function showMessage(text, success = false) {
-    message.textContent = text;
-    message.style.display = "block";
-    message.style.background = success ? "#e8fff0" : "#ffecec";
-    message.style.color = success ? "#087a35" : "#b00020";
-  }
-
-  loginButton.addEventListener("click", async function () {
-
-    const email =
-      document.getElementById("email").value.trim();
-
-    const password =
-      document.getElementById("password").value;
-
-    if (!email || !password) {
-      showMessage("Please enter your email and password.");
-      return;
-    }
-
-    loginButton.disabled = true;
-    loginButton.textContent = "Logging in...";
-
-    const { data, error } =
-      await supabaseClient.auth.signInWithPassword({
-        email: email,
-        password: password
-      });
-
-    if (error) {
-      showMessage(error.message);
-      loginButton.disabled = false;
-      loginButton.textContent = "Login";
-      return;
-    }
-
-    showMessage("Login successful! Redirecting...", true);
-
-    setTimeout(() => {
-      window.location.href = "index.html";
-    }, 800);
-
-  });
-
-
-  document.getElementById("forgotPassword")
-    .addEventListener("click", async function (event) {
-
-      event.preventDefault();
-
-      const email =
-        document.getElementById("email").value.trim();
-
-      if (!email) {
-        showMessage("Enter your email first, then tap Forgot password.");
-        return;
-      }
-
-      const { error } =
-        await supabaseClient.auth.resetPasswordForEmail(
-          email,
-          {
-            redirectTo:
-              "https://michealeze616-source.github.io/maramarket/login.html"
-          }
+    const supabaseClient =
+        window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
         );
 
-      if (error) {
-        showMessage(error.message);
-        return;
-      }
+    const loginButton =
+        document.getElementById("loginButton");
 
-      showMessage(
-        "Password reset link sent. Check your email.",
-        true
-      );
+    const emailInput =
+        document.getElementById("email");
 
+    const passwordInput =
+        document.getElementById("password");
+
+    const message =
+        document.getElementById("message");
+
+    const forgotPassword =
+        document.getElementById("forgotPassword");
+
+
+    function showMessage(text, type) {
+        message.textContent = text;
+        message.className = "message " + type;
+    }
+
+
+    loginButton.addEventListener("click", async function () {
+
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+
+        message.className = "message";
+        message.textContent = "";
+
+        if (!email || !password) {
+            showMessage(
+                "Please enter your email and password.",
+                "error"
+            );
+            return;
+        }
+
+        loginButton.disabled = true;
+        loginButton.textContent = "Logging in...";
+
+        try {
+
+            const result =
+                await supabaseClient.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+            const data = result.data;
+            const error = result.error;
+
+            if (error) {
+
+                console.error("LOGIN ERROR:", error);
+
+                showMessage(
+                    error.message,
+                    "error"
+                );
+
+                loginButton.disabled = false;
+                loginButton.textContent = "Log In";
+                return;
+            }
+
+            if (!data || !data.user) {
+
+                showMessage(
+                    "Login failed. Please try again.",
+                    "error"
+                );
+
+                loginButton.disabled = false;
+                loginButton.textContent = "Log In";
+                return;
+            }
+
+            showMessage(
+                "Login successful! Opening MaraMarket...",
+                "success"
+            );
+
+            setTimeout(function () {
+                window.location.href = "index.html";
+            }, 700);
+
+        } catch (err) {
+
+            console.error(
+                "LOGIN EXCEPTION:",
+                err
+            );
+
+            showMessage(
+                "Something went wrong. Please try again.",
+                "error"
+            );
+
+            loginButton.disabled = false;
+            loginButton.textContent = "Log In";
+        }
     });
 
-</script></body>
+
+    forgotPassword.addEventListener(
+        "click",
+        async function (event) {
+
+            event.preventDefault();
+
+            const email =
+                emailInput.value.trim();
+
+            if (!email) {
+
+                showMessage(
+                    "Enter your email address first.",
+                    "error"
+                );
+
+                return;
+            }
+
+            try {
+
+                const { error } =
+                    await supabaseClient.auth
+                    .resetPasswordForEmail(
+                        email,
+                        {
+                            redirectTo:
+                            "https://michealeze616-source.github.io/maramarket/login.html"
+                        }
+                    );
+
+                if (error) {
+
+                    showMessage(
+                        error.message,
+                        "error"
+                    );
+
+                    return;
+                }
+
+                showMessage(
+                    "Password reset instructions have been sent to your email.",
+                    "success"
+                );
+
+            } catch (err) {
+
+                console.error(err);
+
+                showMessage(
+                    "Unable to send password reset email.",
+                    "error"
+                );
+            }
+        }
+    );
+</script>
+
+</body>
 </html>
