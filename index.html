@@ -11,7 +11,6 @@
         content="MaraMarket — Buy, sell and connect with people around you."
     >
 
-    <!-- Supabase JavaScript library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
@@ -45,8 +44,6 @@
             font: inherit;
         }
 
-        /* HEADER */
-
         header {
             width: 100%;
             padding: 18px 5%;
@@ -54,13 +51,10 @@
             align-items: center;
             justify-content: space-between;
             gap: 20px;
-
             background: rgba(255, 255, 255, 0.78);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-
             border-bottom: 1px solid rgba(37, 99, 235, 0.12);
-
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -95,22 +89,15 @@
         .sell-button {
             text-decoration: none;
             display: inline-block;
-
             border: none;
             cursor: pointer;
-
             background: linear-gradient(135deg, #1261e8, #3984ff);
             color: white;
-
             padding: 11px 18px;
             border-radius: 12px;
-
             font-weight: 700;
             box-shadow: 0 8px 20px rgba(18, 97, 232, 0.22);
-
-            transition:
-                transform 0.2s ease,
-                box-shadow 0.2s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .sell-button:hover {
@@ -118,28 +105,20 @@
             box-shadow: 0 12px 25px rgba(18, 97, 232, 0.28);
         }
 
-        /* HERO */
-
         .hero {
             width: 90%;
             max-width: 1200px;
             margin: 45px auto 25px;
-
             padding: 70px 30px;
-
             text-align: center;
-
             border-radius: 30px;
-
             background:
                 linear-gradient(
                     135deg,
                     rgba(18, 97, 232, 0.96),
                     rgba(58, 132, 255, 0.88)
                 );
-
             color: white;
-
             box-shadow: 0 25px 60px rgba(18, 97, 232, 0.20);
         }
 
@@ -156,33 +135,24 @@
             margin-bottom: 30px;
         }
 
-        /* SEARCH */
-
         .search-area {
             width: 90%;
             max-width: 900px;
             margin: -10px auto 45px;
-
             display: flex;
             gap: 10px;
-
             background: rgba(255, 255, 255, 0.9);
             padding: 10px;
-
             border-radius: 18px;
-
             box-shadow: 0 15px 40px rgba(20, 40, 80, 0.12);
         }
 
         .search-area input {
             flex: 1;
             min-width: 0;
-
             border: none;
             outline: none;
-
             padding: 15px 16px;
-
             background: transparent;
             color: #172033;
         }
@@ -194,18 +164,12 @@
         .search-area button {
             border: none;
             cursor: pointer;
-
             padding: 0 22px;
-
             border-radius: 12px;
-
             background: #1261e8;
             color: white;
-
             font-weight: 700;
         }
-
-        /* SECTIONS */
 
         section {
             width: 90%;
@@ -218,7 +182,6 @@
             align-items: center;
             justify-content: space-between;
             gap: 15px;
-
             margin-bottom: 20px;
         }
 
@@ -233,8 +196,6 @@
             font-size: 14px;
         }
 
-        /* CATEGORIES */
-
         .categories {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
@@ -243,18 +204,12 @@
 
         .category {
             text-decoration: none;
-
             padding: 22px 12px;
-
             text-align: center;
-
             background: rgba(255, 255, 255, 0.8);
             border: 1px solid rgba(18, 97, 232, 0.08);
-
             border-radius: 18px;
-
             box-shadow: 0 10px 25px rgba(20, 40, 80, 0.06);
-
             transition: 0.2s;
         }
 
@@ -274,8 +229,6 @@
             font-size: 14px;
         }
 
-        /* LISTINGS */
-
         .listings {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -284,14 +237,10 @@
 
         .listing-card {
             overflow: hidden;
-
             background: rgba(255, 255, 255, 0.88);
-
             border: 1px solid rgba(18, 97, 232, 0.08);
             border-radius: 20px;
-
             box-shadow: 0 12px 30px rgba(20, 40, 80, 0.07);
-
             transition: 0.2s;
         }
 
@@ -303,13 +252,10 @@
         .listing-image {
             width: 100%;
             height: 190px;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
             background: linear-gradient(135deg, #dbeafe, #eff6ff);
-
             font-size: 55px;
         }
 
@@ -335,20 +281,15 @@
             font-size: 13px;
         }
 
-        /* SUPPORT */
-
         .support {
             padding: 35px 25px;
-
             border-radius: 25px;
-
             background:
                 linear-gradient(
                     135deg,
                     rgba(219, 234, 254, 0.95),
                     rgba(239, 246, 255, 0.95)
                 );
-
             text-align: center;
         }
 
@@ -370,26 +311,17 @@
 
         .support-button {
             text-decoration: none;
-
             padding: 12px 18px;
-
             border-radius: 12px;
-
             background: white;
             color: #1261e8;
-
             font-weight: 700;
-
             box-shadow: 0 7px 20px rgba(20, 40, 80, 0.08);
         }
 
-        /* FOOTER */
-
         footer {
             padding: 35px 5% 90px;
-
             text-align: center;
-
             color: #7a879d;
             font-size: 13px;
         }
@@ -399,7 +331,6 @@
             justify-content: center;
             flex-wrap: wrap;
             gap: 18px;
-
             margin-bottom: 18px;
         }
 
@@ -408,35 +339,25 @@
             color: #5e6c84;
         }
 
-        /* MOBILE NAV */
-
         .mobile-nav {
             display: none;
-
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-
             padding: 10px 8px;
-
             background: rgba(255, 255, 255, 0.94);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-
             border-top: 1px solid rgba(18, 97, 232, 0.10);
-
             z-index: 2000;
         }
 
         .mobile-nav a {
             flex: 1;
-
             text-align: center;
             text-decoration: none;
-
             color: #68758b;
-
             font-size: 11px;
             font-weight: 700;
         }
@@ -450,8 +371,6 @@
         .mobile-nav .active {
             color: #1261e8;
         }
-
-        /* MOBILE */
 
         @media (max-width: 800px) {
 
@@ -537,699 +456,517 @@
 
 <body>
 
-    <!-- HEADER -->
+<header>
 
-    <header>
+    <a href="index.html" class="logo">
+        🔵 MaraMarket
+    </a>
 
-        <a href="index.html" class="logo">
-            🔵 MaraMarket
-        </a>
+    <nav>
 
-        <nav>
+        <a href="index.html">Home</a>
 
-            <a href="index.html">Home</a>
+        <a href="#categories">Browse</a>
 
-            <a href="#categories">Browse</a>
+        <a href="#favorites">Favorites</a>
 
-            <a href="#favorites">Favorites</a>
+        <a href="#messages">Messages</a>
 
-            <a href="#messages">Messages</a>
-
-            <a href="#account">Account</a>
-
-            <a href="sell.html" class="sell-button">
-                ＋ Sell Item
-            </a>
-
-        </nav>
+        <a href="#account">Account</a>
 
         <a href="sell.html" class="sell-button">
-            ＋ Sell
+            ＋ Sell Item
         </a>
 
-    </header>
+    </nav>
 
+    <a href="sell.html" class="sell-button">
+        ＋ Sell
+    </a>
 
-    <!-- HERO -->
+</header>
 
-    <main>
 
-        <section class="hero">
+<main>
 
-            <h1>Buy. Sell. Connect.</h1>
+    <section class="hero">
 
-            <p>
-                Discover great deals, sell your items and connect with people.
-            </p>
-
-            <a href="#categories" class="sell-button">
-                Browse Marketplace
-            </a>
-
-        </section>
-
-
-        <!-- SEARCH -->
-
-        <div class="search-area">
-
-            <input
-                id="searchInput"
-                type="search"
-                placeholder="Search for anything..."
-                autocomplete="off"
-            >
-
-            <button type="button" onclick="searchMarketplace()">
-                Search
-            </button>
-
-        </div>
-
-
-        <!-- CATEGORIES -->
-
-        <section id="categories">
-
-            <div class="section-title">
-
-                <h2>Categories</h2>
-
-                <a href="#categories">
-                    View all
-                </a>
-
-            </div>
-
-            <div class="categories">
-
-                <a href="#" class="category">
-                    <span class="category-icon">📱</span>
-                    <span class="category-name">Phones</span>
-                </a>
-
-                <a href="#" class="category">
-                    <span class="category-icon">💻</span>
-                    <span class="category-name">Electronics</span>
-                </a>
-
-                <a href="#" class="category">
-                    <span class="category-icon">👕</span>
-                    <span class="category-name">Fashion</span>
-                </a>
-
-                <a href="#" class="category">
-                    <span class="category-icon">🚗</span>
-                    <span class="category-name">Vehicles</span>
-                </a>
-
-                <a href="#" class="category">
-                    <span class="category-icon">🏠</span>
-                    <span class="category-name">Property</span>
-                </a>
-
-                <a href="#" class="category">
-                    <span class="category-icon">🛠️</span>
-                    <span class="category-name">Services</span>
-                </a>
-
-                <a href="#" class="category">
-                    <span class="category-icon">🪴</span>
-                    <span class="category-name">Home & Garden</span>
-                </a>
-
-                <a href="#" class="category">
-                    <span class="category-icon">🎮</span>
-                    <span class="category-name">Gaming</span>
-                </a>
-
-            </div>
-
-        </section>
-
-
-        <!-- FRESH LISTINGS -->
-
-        <section id="listings">
-
-            <div class="section-title">
-
-                <h2>Fresh Listings</h2>
-
-                <a href="#listings">
-                    See all
-                </a>
-
-            </div>
-
-            <div class="listings" id="listingContainer">
-
-                <article class="listing-card">
-
-                    <div class="listing-image">
-                        📱
-                    </div>
-
-                    <div class="listing-info">
-
-                        <div class="listing-title">
-                            Smartphone
-                        </div>
-
-                        <div class="listing-price">
-                            ₦250,000
-                        </div>
-
-                        <div class="listing-location">
-                            📍 Lagos
-                        </div>
-
-                    </div>
-
-                </article>
-
-
-                <article class="listing-card">
-
-                    <div class="listing-image">
-                        💻
-                    </div>
-
-                    <div class="listing-info">
-
-                        <div class="listing-title">
-                            Laptop
-                        </div>
-
-                        <div class="listing-price">
-                            ₦450,000
-                        </div>
-
-                        <div class="listing-location">
-                            📍 Abuja
-                        </div>
-
-                    </div>
-
-                </article>
-
-
-                <article class="listing-card">
-
-                    <div class="listing-image">
-                        👟
-                    </div>
-
-                    <div class="listing-info">
-
-                        <div class="listing-title">
-                            Sneakers
-                        </div>
-
-                        <div class="listing-price">
-                            ₦65,000
-                        </div>
-
-                        <div class="listing-location">
-                            📍 Port Harcourt
-                        </div>
-
-                    </div>
-
-                </article>
-
-
-                <article class="listing-card">
-
-                    <div class="listing-image">
-                        🎮
-                    </div>
-
-                    <div class="listing-info">
-
-                        <div class="listing-title">
-                            Gaming Console
-                        </div>
-
-                        <div class="listing-price">
-                            ₦320,000
-                        </div>
-
-                        <div class="listing-location">
-                            📍 Enugu
-                        </div>
-
-                    </div>
-
-                </article>
-
-            </div>
-
-        </section>
-
-
-        <!-- FAVORITES -->
-
-        <section id="favorites">
-
-            <div class="section-title">
-                <h2>Favorites</h2>
-            </div>
-
-            <div class="support">
-
-                <h2>Your saved items</h2>
-
-                <p>
-                    Sign in to save listings and access your favorites
-                    from any device.
-                </p>
-
-                <a href="#" class="sell-button">
-                    Sign In
-                </a>
-
-            </div>
-
-        </section>
-
-
-        <!-- MESSAGES -->
-
-        <section id="messages">
-
-            <div class="section-title">
-                <h2>Messages</h2>
-            </div>
-
-            <div class="support">
-
-                <h2>Chat with sellers</h2>
-
-                <p>
-                    Your conversations with sellers will appear here.
-                </p>
-
-                <a href="#" class="sell-button">
-                    Open Messages
-                </a>
-
-            </div>
-
-        </section>
-
-
-        <!-- ACCOUNT -->
-
-        <section id="account">
-
-            <div class="section-title">
-                <h2>Account</h2>
-            </div>
-
-            <div class="support">
-
-                <h2>Your MaraMarket account</h2>
-
-                <p>
-                    Manage your profile, listings, messages and settings.
-                </p>
-
-                <a href="#" class="sell-button">
-                    Create Account
-                </a>
-
-            </div>
-
-        </section>
-
-
-        <!-- CUSTOMER SERVICE -->
-
-        <section>
-
-            <div class="support">
-
-                <h2>Need Help?</h2>
-
-                <p>
-                    Contact MaraMarket customer service.
-                </p>
-
-                <div class="support-buttons">
-
-                    <a
-                        class="support-button"
-                        href="https://wa.me/2348074314157"
-                        target="_blank"
-                        rel="noopener"
-                    >
-                        💬 WhatsApp Support
-                    </a>
-
-                    <a
-                        class="support-button"
-                        href="tel:08022031720"
-                    >
-                        ☎️ Call Support
-                    </a>
-
-                </div>
-
-            </div>
-
-        </section>
-
-    </main>
-
-
-    <!-- FOOTER -->
-
-    <footer>
-
-        <div class="footer-links">
-
-            <a href="#">About</a>
-            <a href="#">Help Center</a>
-            <a href="#">Safety</a>
-            <a href="#">Terms</a>
-            <a href="#">Privacy</a>
-            <a href="#">Community Guidelines</a>
-
-        </div>
+        <h1>Buy. Sell. Connect.</h1>
 
         <p>
-            © 2026 MaraMarket. Buy. Sell. Connect.
+            Discover great deals, sell your items and connect with people.
         </p>
 
-    </footer>
-
-
-    <!-- MOBILE NAVIGATION -->
-
-    <div class="mobile-nav">
-
-        <a href="index.html" class="active">
-            <span>🏠</span>
-            Home
+        <a href="#categories" class="sell-button">
+            Browse Marketplace
         </a>
 
-        <a href="#categories">
-            <span>🔍</span>
+    </section>
+
+
+    <div class="search-area">
+
+        <input
+            id="searchInput"
+            type="search"
+            placeholder="Search for anything..."
+            autocomplete="off"
+        >
+
+        <button type="button" onclick="searchMarketplace()">
             Search
-        </a>
-
-        <a href="sell.html">
-            <span>＋</span>
-            Sell
-        </a>
-
-        <a href="#messages">
-            <span>💬</span>
-            Messages
-        </a>
-
-        <a href="#account">
-            <span>👤</span>
-            Account
-        </a>
+        </button>
 
     </div>
 
 
-    <!-- MARA MARKET / SUPABASE CONNECTION -->
+    <section id="categories">
 
-    <script>
+        <div class="section-title">
 
-        /*
-         * =====================================================
-         * MARA MARKET BACKEND CONFIGURATION
-         * =====================================================
-         *
-         * These are TEST credentials supplied for development.
-         *
-         * When we're ready to connect your real project,
-         * replace ONLY these two values with your real
-         * Supabase Project URL and Publishable Key.
-         *
-         * NEVER put a Supabase secret/service-role key here.
-         */
+            <h2>Categories</h2>
 
-        const SUPABASE_URL =
-            "https://hakjsjmexinuiwhxejva.supabase.co";
+            <a href="#categories">
+                View all
+            </a>
 
-        const SUPABASE_PUBLISHABLE_KEY =
-            "sb_publishable_OjO3jp9ZlV0N2WHHBddN8g_rryvMoAL";
+        </div>
+
+        <div class="categories">
+
+            <a href="#" class="category">
+                <span class="category-icon">📱</span>
+                <span class="category-name">Phones</span>
+            </a>
+
+            <a href="#" class="category">
+                <span class="category-icon">💻</span>
+                <span class="category-name">Electronics</span>
+            </a>
+
+            <a href="#" class="category">
+                <span class="category-icon">👕</span>
+                <span class="category-name">Fashion</span>
+            </a>
+
+            <a href="#" class="category">
+                <span class="category-icon">🚗</span>
+                <span class="category-name">Vehicles</span>
+            </a>
+
+            <a href="#" class="category">
+                <span class="category-icon">🏠</span>
+                <span class="category-name">Property</span>
+            </a>
+
+            <a href="#" class="category">
+                <span class="category-icon">🛠️</span>
+                <span class="category-name">Services</span>
+            </a>
+
+            <a href="#" class="category">
+                <span class="category-icon">🪴</span>
+                <span class="category-name">Home & Garden</span>
+            </a>
+
+            <a href="#" class="category">
+                <span class="category-icon">🎮</span>
+                <span class="category-name">Gaming</span>
+            </a>
+
+        </div>
+
+    </section>
 
 
-        /*
-         * Create the Supabase client.
-         */
+    <section id="listings">
 
-        let supabaseClient = null;
+        <div class="section-title">
 
-        if (
-            typeof window.supabase !== "undefined" &&
-            SUPABASE_URL &&
-            SUPABASE_PUBLISHABLE_KEY
-        ) {
+            <h2>Fresh Listings</h2>
 
-            supabaseClient =
-                window.supabase.createClient(
-                    SUPABASE_URL,
-                    SUPABASE_PUBLISHABLE_KEY
-                );
+            <a href="#listings">
+                See all
+            </a>
 
-        }
+        </div>
+
+        <div class="listings" id="listingContainer">
+
+            <article class="listing-card">
+                <div class="listing-image">📱</div>
+                <div class="listing-info">
+                    <div class="listing-title">Smartphone</div>
+                    <div class="listing-price">₦250,000</div>
+                    <div class="listing-location">📍 Lagos</div>
+                </div>
+            </article>
+
+            <article class="listing-card">
+                <div class="listing-image">💻</div>
+                <div class="listing-info">
+                    <div class="listing-title">Laptop</div>
+                    <div class="listing-price">₦450,000</div>
+                    <div class="listing-location">📍 Abuja</div>
+                </div>
+            </article>
+
+            <article class="listing-card">
+                <div class="listing-image">👟</div>
+                <div class="listing-info">
+                    <div class="listing-title">Sneakers</div>
+                    <div class="listing-price">₦65,000</div>
+                    <div class="listing-location">📍 Port Harcourt</div>
+                </div>
+            </article>
+
+            <article class="listing-card">
+                <div class="listing-image">🎮</div>
+                <div class="listing-info">
+                    <div class="listing-title">Gaming Console</div>
+                    <div class="listing-price">₦320,000</div>
+                    <div class="listing-location">📍 Enugu</div>
+                </div>
+            </article>
+
+        </div>
+
+    </section>
 
 
-        /*
-         * =====================================================
-         * SEARCH
-         * =====================================================
-         */
+    <section id="favorites">
 
-        async function searchMarketplace() {
+        <div class="section-title">
+            <h2>Favorites</h2>
+        </div>
 
-            const input =
-                document.getElementById("searchInput");
+        <div class="support">
 
-            const searchText =
-                input.value.trim();
+            <h2>Your saved items</h2>
 
-            if (!searchText) {
+            <p>
+                Sign in to save listings and access your favorites
+                from any device.
+            </p>
 
-                alert("Please enter something to search.");
+            <a href="login.html" class="sell-button">
+                Sign In
+            </a>
 
-                return;
-            }
+        </div>
 
-            /*
-             * Real database search will be connected here.
-             */
+    </section>
 
-            if (!supabaseClient) {
 
-                alert("MaraMarket backend is not connected.");
+    <section id="messages">
 
-                return;
-            }
+        <div class="section-title">
+            <h2>Messages</h2>
+        </div>
 
-            console.log(
-                "Searching MaraMarket for:",
-                searchText
+        <div class="support">
+
+            <h2>Chat with sellers</h2>
+
+            <p>
+                Your conversations with sellers will appear here.
+            </p>
+
+            <a href="login.html" class="sell-button">
+                Open Messages
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <section id="account">
+
+        <div class="section-title">
+            <h2>Account</h2>
+        </div>
+
+        <div class="support">
+
+            <h2>Your MaraMarket account</h2>
+
+            <p>
+                Manage your profile, listings, messages and settings.
+            </p>
+
+            <a href="signup.html" class="sell-button">
+                Create Account
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <section>
+
+        <div class="support">
+
+            <h2>Need Help?</h2>
+
+            <p>
+                Contact MaraMarket customer service.
+            </p>
+
+            <div class="support-buttons">
+
+                <a
+                    class="support-button"
+                    href="https://wa.me/2348074314157"
+                    target="_blank"
+                    rel="noopener"
+                >
+                    💬 WhatsApp Support
+                </a>
+
+                <a
+                    class="support-button"
+                    href="tel:08022031720"
+                >
+                    ☎️ Call Support
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <div class="footer-links">
+
+        <a href="#">About</a>
+        <a href="#">Help Center</a>
+        <a href="#">Safety</a>
+        <a href="#">Terms</a>
+        <a href="#">Privacy</a>
+        <a href="#">Community Guidelines</a>
+
+    </div>
+
+    <p>
+        © 2026 MaraMarket. Buy. Sell. Connect.
+    </p>
+
+</footer>
+
+
+<div class="mobile-nav">
+
+    <a href="index.html" class="active">
+        <span>🏠</span>
+        Home
+    </a>
+
+    <a href="#categories">
+        <span>🔍</span>
+        Search
+    </a>
+
+    <a href="sell.html">
+        <span>＋</span>
+        Sell
+    </a>
+
+    <a href="login.html">
+        <span>💬</span>
+        Messages
+    </a>
+
+    <a href="signup.html">
+        <span>👤</span>
+        Account
+    </a>
+
+</div>
+
+
+<script>
+
+    const SUPABASE_URL =
+        "https://hakjsjmexinuiwhxejva.supabase.co";
+
+    const SUPABASE_PUBLISHABLE_KEY =
+        "sb_publishable_OjO3jp9ZlV0N2WHHBddN8g_rryvMoAL";
+
+    let supabaseClient = null;
+
+    if (
+        typeof window.supabase !== "undefined" &&
+        SUPABASE_URL &&
+        SUPABASE_PUBLISHABLE_KEY
+    ) {
+
+        supabaseClient =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_PUBLISHABLE_KEY
             );
 
-            /*
-             * Listing search will be implemented after
-             * authentication and database connection are tested.
-             */
+    }
 
-            alert(
-                "Search system is connected to the MaraMarket backend foundation.\n\n" +
-                "Real listing search will be added next."
-            );
+
+    async function searchMarketplace() {
+
+        const input =
+            document.getElementById("searchInput");
+
+        const searchText =
+            input.value.trim();
+
+        if (!searchText) {
+
+            alert("Please enter something to search.");
+
+            return;
         }
 
+        if (!supabaseClient) {
 
-        /*
-         * Press Enter to search.
-         */
+            alert("MaraMarket backend is not connected.");
 
-        document
-            .getElementById("searchInput")
-            .addEventListener(
-                "keydown",
-                function(event) {
+            return;
+        }
 
-                    if (event.key === "Enter") {
+        console.log(
+            "Searching MaraMarket for:",
+            searchText
+        );
 
-                        searchMarketplace();
+        alert(
+            "Search system is connected to the MaraMarket backend foundation.\n\n" +
+            "Real listing search will be added next."
+        );
+    }
 
-                    }
 
+    document
+        .getElementById("searchInput")
+        .addEventListener(
+            "keydown",
+            function(event) {
+
+                if (event.key === "Enter") {
+                    searchMarketplace();
                 }
-            );
-
-
-        /*
-         * =====================================================
-         * FUTURE LISTINGS
-         * =====================================================
-         */
-
-        async function loadListings() {
-
-            if (!supabaseClient) {
-
-                console.error(
-                    "Supabase client is not available."
-                );
-
-                return;
-            }
-
-            /*
-             * Real listings will be loaded here.
-             *
-             * Example future flow:
-             *
-             * const { data, error } =
-             * await supabaseClient
-             *     .from("listings")
-             *     .select("*")
-             *     .eq("status", "active");
-             */
-
-        }
-
-
-        /*
-         * =====================================================
-         * FUTURE USER SESSION
-         * =====================================================
-         */
-
-        async function checkUserSession() {
-
-            if (!supabaseClient) {
-                return;
-            }
-
-            /*
-             * Authentication will be connected here.
-             */
-
-            const {
-                data: {
-                    session
-                }
-            } =
-                await supabaseClient.auth.getSession();
-
-            if (session) {
-
-                console.log(
-                    "MaraMarket user session found."
-                );
-
-            } else {
-
-                console.log(
-                    "No MaraMarket user is currently signed in."
-                );
-
-            }
-
-        }
-
-
-        /*
-         * =====================================================
-         * FUTURE NOTIFICATIONS
-         * =====================================================
-         */
-
-        async function loadNotifications() {
-
-            if (!supabaseClient) {
-                return;
-            }
-
-            /*
-             * Notification system will be connected here.
-             */
-
-        }
-
-
-        /*
-         * =====================================================
-         * BACKEND CONNECTION TEST
-         * =====================================================
-         */
-
-        async function testBackendConnection() {
-
-            if (!supabaseClient) {
-
-                console.error(
-                    "Supabase client failed to initialize."
-                );
-
-                return false;
-            }
-
-            const {
-                data,
-                error
-            } =
-                await supabaseClient
-                    .from("categories")
-                    .select("id, name, slug")
-                    .limit(1);
-
-            if (error) {
-
-                console.error(
-                    "MaraMarket backend connection error:",
-                    error.message
-                );
-
-                return false;
-            }
-
-            console.log(
-                "MaraMarket backend connection successful.",
-                data
-            );
-
-            return true;
-        }
-
-
-        /*
-         * =====================================================
-         * START MARA MARKET
-         * =====================================================
-         */
-
-        document.addEventListener(
-            "DOMContentLoaded",
-            async function() {
-
-                await testBackendConnection();
-
-                await checkUserSession();
-
-                await loadListings();
-
-                await loadNotifications();
 
             }
         );
 
-    </script>
+
+    async function loadListings() {
+
+        if (!supabaseClient) {
+            return;
+        }
+
+    }
+
+
+    async function checkUserSession() {
+
+        if (!supabaseClient) {
+            return;
+        }
+
+        const {
+            data: {
+                session
+            }
+        } =
+            await supabaseClient.auth.getSession();
+
+        if (session) {
+
+            console.log(
+                "MaraMarket user session found."
+            );
+
+        } else {
+
+            console.log(
+                "No MaraMarket user is currently signed in."
+            );
+
+        }
+
+    }
+
+
+    async function loadNotifications() {
+
+        if (!supabaseClient) {
+            return;
+        }
+
+    }
+
+
+    async function testBackendConnection() {
+
+        if (!supabaseClient) {
+
+            console.error(
+                "Supabase client failed to initialize."
+            );
+
+            return false;
+        }
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from("categories")
+                .select("id, name, slug")
+                .limit(1);
+
+        if (error) {
+
+            console.error(
+                "MaraMarket backend connection error:",
+                error.message
+            );
+
+            return false;
+        }
+
+        console.log(
+            "MaraMarket backend connection successful.",
+            data
+        );
+
+        return true;
+    }
+
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        async function() {
+
+            await testBackendConnection();
+
+            await checkUserSession();
+
+            await loadListings();
+
+            await loadNotifications();
+
+        }
+    );
+
+</script>
 
 </body>
 </html>
