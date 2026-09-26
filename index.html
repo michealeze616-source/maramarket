@@ -968,7 +968,6 @@
 // ===============================
 // MARA MARKET LOGIN DETECTION
 // ===============================
-
 async function checkLoginStatus() {
 
     try {
@@ -990,13 +989,13 @@ async function checkLoginStatus() {
 
         if (session && session.user) {
 
-            accountButton.innerHTML =
-                '<a href="account" class="sell-button">My Account</a>';
+            accountButton.href = "#account";
+            accountButton.textContent = "My Account";
 
         } else {
 
-            accountButton.innerHTML =
-                '<a href="signup.html" class="sell-button">Create Account</a>';
+            accountButton.href = "signup.html";
+            accountButton.textContent = "Create Account";
         }
 
     } catch (error) {
@@ -1009,6 +1008,7 @@ async function checkLoginStatus() {
 }
 
 checkLoginStatus();
+
 </script>
 
 </body>
