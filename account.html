@@ -1,173 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>MaraMarket — My Account</title>
+<title>My Account - MaraMarket</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            min-height: 100vh;
-            background:
-                radial-gradient(
-                    circle at top left,
-                    #dbeafe 0%,
-                    transparent 35%
-                ),
-                radial-gradient(
-                    circle at bottom right,
-                    #bfdbfe 0%,
-                    transparent 35%
-                ),
-                #f4f8ff;
-            color: #172033;
-        }
+body {
+    font-family: Arial, sans-serif;
+    background:
+        linear-gradient(135deg, #eef5ff, #f8fbff);
+    min-height: 100vh;
+    color: #172033;
+}
 
-        header {
-            padding: 18px 5%;
-            background: rgba(255,255,255,0.85);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(18,97,232,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+header {
+    height: 70px;
+    background: rgba(255,255,255,.95);
+    border-bottom: 1px solid #e5eaf2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 22px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
 
-        .logo {
-            text-decoration: none;
-            color: #1261e8;
-            font-size: 24px;
-            font-weight: 900;
-        }
+.logo {
+    color: #1769ff;
+    font-size: 24px;
+    font-weight: 800;
+    text-decoration: none;
+}
 
-        .back {
-            text-decoration: none;
-            color: #1261e8;
-            font-weight: 700;
-        }
+.home-link {
+    color: #1769ff;
+    text-decoration: none;
+    font-weight: 600;
+}
 
-        main {
-            width: 90%;
-            max-width: 650px;
-            margin: 45px auto 100px;
-        }
+.container {
+    width: 100%;
+    max-width: 850px;
+    margin: auto;
+    padding: 35px 18px 60px;
+}
 
-        .card {
-            background: rgba(255,255,255,0.9);
-            border-radius: 25px;
-            padding: 30px;
-            box-shadow:
-                0 20px 50px rgba(20,40,80,0.1);
-        }
+.profile-card {
+    background: rgba(255,255,255,.96);
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 15px 45px rgba(30,70,130,.10);
+}
 
-        .profile-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+.profile-top {
+    text-align: center;
+    margin-bottom: 30px;
+}
 
-        .avatar {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            margin: 0 auto 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(
-                135deg,
-                #1261e8,
-                #3984ff
-            );
-            color: white;
-            font-size: 38px;
-            font-weight: 900;
-        }
+.avatar {
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    background: linear-gradient(135deg,#1769ff,#4d91ff);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    font-size: 34px;
+    font-weight: 800;
+}
 
-        h1 {
-            font-size: 28px;
-            margin-bottom: 8px;
-        }
+h1 {
+    font-size: 28px;
+    margin-bottom: 7px;
+}
 
-        .email {
-            color: #718096;
-        }
+.email {
+    color: #6b7280;
+    word-break: break-word;
+}
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+.section {
+    margin-top: 28px;
+}
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 700;
-        }
+.section-title {
+    font-size: 17px;
+    font-weight: 750;
+    margin-bottom: 12px;
+}
 
-        input {
-            width: 100%;
-            padding: 14px;
-            border: 1px solid #d8e1ef;
-            border-radius: 12px;
-            outline: none;
-            background: white;
-        }
+.input {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #dce3ee;
+    border-radius: 11px;
+    font-size: 15px;
+    outline: none;
+}
 
-        input:focus {
-            border-color: #1261e8;
-        }
+.input:focus {
+    border-color: #1769ff;
+    box-shadow: 0 0 0 3px rgba(23,105,255,.10);
+}
 
-        .button {
-            width: 100%;
-            border: none;
-            cursor: pointer;
-            padding: 14px;
-            border-radius: 12px;
-            background: linear-gradient(
-                135deg,
-                #1261e8,
-                #3984ff
-            );
-            color: white;
-            font-weight: 800;
-            margin-top: 5px;
-        }
+.save-btn,
+.logout-btn,
+.listings-btn,
+.sell-btn {
+    width: 100%;
+    border: none;
+    border-radius: 11px;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 750;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+}
 
-        .logout {
-            margin-top: 12px;
-            background: #eef4ff;
-            color: #1261e8;
-        }
+.save-btn {
+    background: #1769ff;
+    color: white;
+    margin-top: 12px;
+}
 
-        .status {
-            margin-top: 15px;
-            text-align: center;
-            font-weight: 700;
-            min-height: 20px;
-        }
+.listings-btn {
+    background: #1769ff;
+    color: white;
+}
 
-        .links {
-            margin-top: 25px;
-            text-align: center;
-        }
+.sell-btn {
+    background: #eef4ff;
+    color: #1769ff;
+    margin-top: 10px;
+}
 
-        .links a {
-            color: #1261e8;
-            text-decoration: none;
-            font-weight: 700;
-        }
-    </style>
+.logout-btn {
+    background: #fff0f0;
+    color: #c62828;
+    margin-top: 10px;
+}
+
+.message {
+    display: none;
+    padding: 12px;
+    border-radius: 10px;
+    margin-top: 12px;
+    font-size: 14px;
+}
+
+.success {
+    background: #e5f8ec;
+    color: #147a36;
+}
+
+.error {
+    background: #ffe9e9;
+    color: #b42318;
+}
+
+.loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: #667085;
+}
+
+@media (max-width: 600px) {
+
+    header {
+        padding: 0 16px;
+    }
+
+    .logo {
+        font-size: 21px;
+    }
+
+    .container {
+        padding: 22px 14px 45px;
+    }
+
+    .profile-card {
+        padding: 22px 18px;
+        border-radius: 20px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+}
+</style>
 </head>
 
 <body>
@@ -175,320 +210,385 @@
 <header>
 
     <a href="index.html" class="logo">
-        🔵 MaraMarket
+        MaraMarket
     </a>
 
-    <a href="index.html" class="back">
+    <a href="index.html" class="home-link">
         ← Home
     </a>
 
 </header>
 
 
-<main>
+<div class="container">
 
-    <div class="card">
+    <div id="loading" class="loading">
+        Loading your account...
+    </div>
 
-        <div class="profile-header">
 
-            <div class="avatar" id="avatar">
-                👤
+    <div id="accountCard"
+         class="profile-card"
+         style="display:none;">
+
+        <div class="profile-top">
+
+            <div id="avatar"
+                 class="avatar">
+                M
             </div>
 
             <h1 id="welcomeName">
-                Loading...
+                MaraMarket User
             </h1>
 
-            <p
-                class="email"
-                id="userEmail"
-            >
+            <div id="email"
+                 class="email">
                 Loading...
-            </p>
+            </div>
 
         </div>
 
 
-        <div class="form-group">
+        <!-- MY LISTINGS -->
 
-            <label for="displayName">
-                Display Name
-            </label>
+        <div class="section">
+
+            <div class="section-title">
+                Selling
+            </div>
+
+            <a href="my-listings.html"
+               class="listings-btn">
+
+                📦 My Listings
+
+            </a>
+
+            <a href="sell.html"
+               class="sell-btn">
+
+                + Sell Something
+
+            </a>
+
+        </div>
+
+
+        <!-- PROFILE -->
+
+        <div class="section">
+
+            <div class="section-title">
+                Profile Information
+            </div>
 
             <input
                 id="displayName"
+                class="input"
                 type="text"
-                placeholder="Enter your name"
-                maxlength="50"
+                placeholder="Your name"
             >
+
+            <button
+                id="saveBtn"
+                class="save-btn"
+                onclick="saveProfile()">
+
+                Save Changes
+
+            </button>
+
+            <div
+                id="message"
+                class="message">
+            </div>
 
         </div>
 
 
-        <button
-            class="button"
-            type="button"
-            onclick="saveProfile()"
-        >
-            Save Changes
-        </button>
+        <!-- ACCOUNT -->
 
+        <div class="section">
 
-        <button
-            class="button logout"
-            type="button"
-            onclick="logoutUser()"
-        >
-            Log Out
-        </button>
+            <div class="section-title">
+                Account
+            </div>
 
+            <button
+                class="logout-btn"
+                onclick="logoutUser()">
 
-        <div
-            class="status"
-            id="status"
-        ></div>
+                Log Out
 
-
-        <div class="links">
-
-            <a href="index.html">
-                ← Back to MaraMarket
-            </a>
+            </button>
 
         </div>
 
     </div>
 
-</main>
+</div>
 
 
 <script>
 
-    const SUPABASE_URL =
-        "https://hakjsjmexinuiwhxejva.supabase.co";
+const SUPABASE_URL =
+    "https://hakjsjmexinuiwhxejva.supabase.co";
 
-    const SUPABASE_PUBLISHABLE_KEY =
-        "sb_publishable_OjO3jp9ZlV0N2WHHBddN8g_rryvMoAL";
-
-
-    const supabaseClient =
-        window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_PUBLISHABLE_KEY
-        );
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_OjO3jp9ZlV0N2WHHBddN8g_rryvMoAL";
 
 
-    let currentUser = null;
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
 
 
-    function escapeHtml(value) {
+let currentUser = null;
 
-        return String(value)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
 
+function getUserName(user) {
+
+    return (
+        user.user_metadata?.full_name ||
+        user.user_metadata?.name ||
+        user.user_metadata?.username ||
+        "MaraMarket User"
+    );
+}
+
+
+function showMessage(text, type) {
+
+    const message =
+        document.getElementById("message");
+
+    message.textContent = text;
+
+    message.className =
+        "message " + type;
+
+    message.style.display = "block";
+
+}
+
+
+async function loadAccount() {
+
+    const {
+        data,
+        error
+    } = await supabaseClient.auth.getSession();
+
+
+    if (error) {
+
+        console.error(error);
+
+        window.location.href =
+            "login.html";
+
+        return;
     }
 
 
-    async function loadAccount() {
+    const session = data.session;
 
-        const {
-            data: {
-                session
-            },
-            error
-        } =
-            await supabaseClient.auth.getSession();
 
+    if (!session) {
+
+        window.location.href =
+            "login.html";
+
+        return;
+    }
+
+
+    currentUser = session.user;
+
+
+    const name =
+        getUserName(currentUser);
+
+
+    document.getElementById(
+        "welcomeName"
+    ).textContent = name;
+
+
+    document.getElementById(
+        "email"
+    ).textContent =
+        currentUser.email || "";
+
+
+    document.getElementById(
+        "displayName"
+    ).value = name === "MaraMarket User"
+        ? ""
+        : name;
+
+
+    const firstLetter =
+        name.charAt(0).toUpperCase();
+
+
+    document.getElementById(
+        "avatar"
+    ).textContent =
+        firstLetter || "M";
+
+
+    document.getElementById(
+        "loading"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "accountCard"
+    ).style.display = "block";
+
+}
+
+
+async function saveProfile() {
+
+    if (!currentUser) {
+        return;
+    }
+
+
+    const input =
+        document.getElementById(
+            "displayName"
+        );
+
+
+    const newName =
+        input.value.trim();
+
+
+    if (!newName) {
+
+        showMessage(
+            "Please enter your name.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const saveBtn =
+        document.getElementById(
+            "saveBtn"
+        );
+
+
+    saveBtn.disabled = true;
+
+    saveBtn.textContent =
+        "Saving...";
+
+
+    const {
+        error
+    } = await supabaseClient.auth.updateUser({
+
+        data: {
+            full_name: newName
+        }
+
+    });
+
+
+    saveBtn.disabled = false;
+
+    saveBtn.textContent =
+        "Save Changes";
+
+
+    if (error) {
+
+        console.error(error);
+
+        showMessage(
+            error.message,
+            "error"
+        );
+
+        return;
+    }
+
+
+    document.getElementById(
+        "welcomeName"
+    ).textContent =
+        newName;
+
+
+    document.getElementById(
+        "avatar"
+    ).textContent =
+        newName
+            .charAt(0)
+            .toUpperCase();
+
+
+    showMessage(
+        "Profile updated successfully.",
+        "success"
+    );
+
+}
+
+
+async function logoutUser() {
+
+    const {
+        error
+    } = await supabaseClient.auth.signOut();
+
+
+    if (error) {
+
+        console.error(error);
+
+        showMessage(
+            error.message,
+            "error"
+        );
+
+        return;
+    }
+
+
+    window.location.href =
+        "index.html";
+
+}
+
+
+supabaseClient.auth.onAuthStateChange(
+    (event, session) => {
 
         if (
-            error ||
-            !session ||
-            !session.user
+            event === "SIGNED_OUT" ||
+            !session
         ) {
 
             window.location.href =
                 "login.html";
 
-            return;
-
         }
-
-
-        currentUser = session.user;
-
-
-        const email =
-            currentUser.email || "";
-
-
-        const name =
-            currentUser.user_metadata?.full_name ||
-            currentUser.user_metadata?.name ||
-            currentUser.user_metadata?.username ||
-            "MaraMarket User";
-
-
-        document.getElementById(
-            "welcomeName"
-        ).textContent =
-            "Welcome, " + name + " 👋";
-
-
-        document.getElementById(
-            "userEmail"
-        ).textContent =
-            email;
-
-
-        document.getElementById(
-            "displayName"
-        ).value =
-            name;
-
-
-        const firstLetter =
-            name.trim().charAt(0).toUpperCase();
-
-
-        document.getElementById(
-            "avatar"
-        ).textContent =
-            firstLetter || "👤";
 
     }
+);
 
 
-    async function saveProfile() {
-
-        if (!currentUser) {
-
-            return;
-
-        }
-
-
-        const input =
-            document.getElementById(
-                "displayName"
-            );
-
-
-        const newName =
-            input.value.trim();
-
-
-        const status =
-            document.getElementById(
-                "status"
-            );
-
-
-        if (!newName) {
-
-            status.textContent =
-                "Please enter a name.";
-
-            return;
-
-        }
-
-
-        status.textContent =
-            "Saving...";
-
-
-        const {
-            data,
-            error
-        } =
-            await supabaseClient.auth.updateUser({
-
-                data: {
-                    full_name: newName
-                }
-
-            });
-
-
-        if (error) {
-
-            console.error(error);
-
-            status.textContent =
-                "Could not save your changes.";
-
-            return;
-
-        }
-
-
-        currentUser =
-            data.user;
-
-
-        document.getElementById(
-            "welcomeName"
-        ).textContent =
-            "Welcome, " +
-            newName +
-            " 👋";
-
-
-        document.getElementById(
-            "avatar"
-        ).textContent =
-            newName
-                .charAt(0)
-                .toUpperCase();
-
-
-        status.textContent =
-            "Profile updated successfully! ✓";
-
-
-        setTimeout(
-            function() {
-
-                status.textContent = "";
-
-            },
-            3000
-        );
-
-    }
-
-
-    async function logoutUser() {
-
-        const {
-            error
-        } =
-            await supabaseClient.auth.signOut();
-
-
-        if (error) {
-
-            document.getElementById(
-                "status"
-            ).textContent =
-                "Could not log out.";
-
-            return;
-
-        }
-
-
-        window.location.href =
-            "index.html";
-
-    }
-
-
-    loadAccount();
+loadAccount();
 
 </script>
 
