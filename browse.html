@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Browse Listings - MaraMarket</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f7fb;
+    color: #172033;
+}
+
+/* HEADER */
+header {
+    background: #0d6efd;
+    color: white;
+    padding: 16px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-inner {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.logo {
+    color: white;
+    text-decoration: none;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+nav {
+    display: flex;
+    gap: 15px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+/* SEARCH */
+.search-area {
+    background: white;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.05);
+}
+
+.search-inner {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    gap: 10px;
+}
+
+.search-inner input {
+    flex: 1;
+    padding: 14px;
+    border: 1px solid #d7dce5;
+    border-radius: 10px;
+    font-size: 15px;
+}
+
+.search-inner button {
+    background: #0d6efd;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0 22px;
+    font-weight: bold;
+}
+
+/* MAIN */
+.container {
+    max-width: 1200px;
+    margin: 25px auto;
+    padding: 0 16px;
+}
+
+.top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 10px;
+}
+
+.top-row h1 {
+    font-size: 25px;
+}
+
+select {
+    padding: 10px;
+    border: 1px solid #d7dce5;
+    border-radius: 8px;
+    background: white;
+}
+
+/* LISTINGS */
+.listings {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+
+.card {
+    background: white;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,.07);
+    cursor: pointer;
+    transition: transform .2s;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+}
+
+.card-image {
+    height: 190px;
+    background: #e9edf3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #788397;
+    overflow: hidden;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.no-image {
+    font-size: 40px;
+}
+
+.card-content {
+    padding: 14px;
+}
+
+.card-title {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.price {
+    color: #0d6efd;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 7px;
+}
+
+.location {
+    color: #697586;
+    font-size: 13px;
+}
+
+.condition {
+    display: inline-block;
+    margin-top: 9px;
+    padding: 5px 8px;
+    background: #eef4ff;
+    color: #0d6efd;
+    border-radius: 6px;
+    font-size: 12px;
+}
+
+/* STATES */
+.message {
+    text-align: center;
+    padding: 50px 20px;
+    color: #687386;
+}
+
+.spinner {
+    width: 35px;
+    height: 35px;
+    border: 4px solid #ddd;
+    border-top-color: #0d6efd;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* MOBILE */
+@media (max-width: 900px) {
+    .listings {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 650px) {
+    .header-inner {
+        flex-direction: column;
+    }
+
+    nav {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .search-inner {
+        flex-direction: column;
+    }
+
+    .search-inner button {
+        padding: 13px;
+    }
+
+    .listings {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .card-image {
+        height: 150px;
+    }
+
+    .top-row {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-inner">
+
+        <a href="index.html" class="logo">
+            MaraMarket
+        </a>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="sell.html">Sell</a>
+            <a href="account.html">Account</a>
+        </nav>
+
+    </div>
+</header>
+
+
+<section class="search-area">
+
+    <div class="search-inner">
+
+        <input
+            type="search"
+            id="searchInput"
+            placeholder="Search for phones, cars, fashion, electronics..."
+        >
+
+        <button onclick="searchListings()">
+            Search
+        </button>
+
+    </div>
+
+</section>
+
+
+<main class="container">
+
+    <div class="top-row">
+
+        <h1 id="pageTitle">
+            Browse Listings
+        </h1>
+
+        <select id="categoryFilter" onchange="filterListings()">
+
+            <option value="">All Categories</option>
+
+            <option value="Phones">Phones</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Fashion">Fashion</option>
+            <option value="Vehicles">Vehicles</option>
+            <option value="Property">Property</option>
+            <option value="Gaming">Gaming</option>
+            <option value="Beauty">Beauty</option>
+            <option value="Home & Garden">Home & Garden</option>
+            <option value="Sports">Sports</option>
+            <option value="Services">Services</option>
+            <option value="Other">Other</option>
+
+        </select>
+
+    </div>
+
+
+    <div id="loading" class="message">
+
+        <div class="spinner"></div>
+
+        <p>Loading listings...</p>
+
+    </div>
+
+
+    <div id="listings" class="listings"></div>
+
+
+    <div id="empty" class="message" style="display:none;">
+
+        <h2>No listings found</h2>
+
+        <p>
+            Try another search or category.
+        </p>
+
+    </div>
+
+</main>
+
+
+<script>
+
+/* =========================
+   SUPABASE
+========================= */
+
+const SUPABASE_URL =
+    "https://hakjsjmexinuiwhxejva.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_OjO3jp9ZlV0N2WHHBddN8g_rryvMoAL";
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+/* =========================
+   VARIABLES
+========================= */
+
+let allListings = [];
+
+let currentSearch = "";
+
+let currentCategory = "";
+
+
+/* =========================
+   LOAD LISTINGS
+========================= */
+
+async function loadListings() {
+
+    const loading =
+        document.getElementById("loading");
+
+    const listingsContainer =
+        document.getElementById("listings");
+
+    const empty =
+        document.getElementById("empty");
+
+    loading.style.display = "block";
+
+    listingsContainer.innerHTML = "";
+
+    empty.style.display = "none";
+
+
+    const { data, error } =
+        await supabaseClient
+            .from("listings")
+            .select(`
+                id,
+                seller_id,
+                title,
+                description,
+                price,
+                condition,
+                brand,
+                model,
+                state,
+                city,
+                area,
+                status,
+                views,
+                favorites_count,
+                image_urls,
+                created_at
+            `)
+            .eq("status", "active")
+            .order("created_at", {
+                ascending: false
+            });
+
+
+    loading.style.display = "none";
+
+
+    if (error) {
+
+        console.error(error);
+
+        listingsContainer.innerHTML = `
+            <div class="message">
+                <h2>Unable to load listings</h2>
+                <p>${escapeHtml(error.message)}</p>
+            </div>
+        `;
+
+        return;
+    }
+
+
+    allListings = data || [];
+
+    applyFilters();
+}
+
+
+/* =========================
+   FILTER
+========================= */
+
+function applyFilters() {
+
+    let results = [...allListings];
+
+
+    if (currentSearch) {
+
+        const search =
+            currentSearch.toLowerCase();
+
+        results = results.filter(item => {
+
+            const text = [
+
+                item.title,
+                item.description,
+                item.brand,
+                item.model,
+                item.state,
+                item.city,
+                item.area
+
+            ]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase();
+
+            return text.includes(search);
+        });
+    }
+
+
+    if (currentCategory) {
+
+        /*
+         The current listings table stores
+         category_id rather than category name.
+
+         Until category_id is connected to
+         the categories table, the category
+         filter will not be applied here.
+        */
+
+    }
+
+
+    renderListings(results);
+}
+
+
+/* =========================
+   RENDER LISTINGS
+========================= */
+
+function renderListings(items) {
+
+    const container =
+        document.getElementById("listings");
+
+    const empty =
+        document.getElementById("empty");
+
+
+    container.innerHTML = "";
+
+
+    if (!items.length) {
+
+        empty.style.display = "block";
+
+        return;
+    }
+
+
+    empty.style.display = "none";
+
+
+    items.forEach(item => {
+
+        const card =
+            document.createElement("div");
+
+        card.className = "card";
+
+        card.onclick = function() {
+
+            openListing(item.id);
+        };
+
+
+        let imageHTML = `
+            <div class="no-image">
+                🛍️
+            </div>
+        `;
+
+
+        if (
+            Array.isArray(item.image_urls) &&
+            item.image_urls.length > 0 &&
+            item.image_urls[0]
+        ) {
+
+            imageHTML = `
+                <img
+                    src="${escapeAttribute(item.image_urls[0])}"
+                    alt="${escapeAttribute(item.title)}"
+                    onerror="this.style.display='none';"
+                >
+            `;
+        }
+
+
+        const location =
+            [
+                item.area,
+                item.city,
+                item.state
+            ]
+            .filter(Boolean)
+            .join(", ");
+
+
+        card.innerHTML = `
+
+            <div class="card-image">
+                ${imageHTML}
+            </div>
+
+            <div class="card-content">
+
+                <div class="card-title">
+                    ${escapeHtml(item.title || "Untitled listing")}
+                </div>
+
+                <div class="price">
+                    ₦${Number(item.price || 0).toLocaleString()}
+                </div>
+
+                <div class="location">
+                    📍 ${escapeHtml(location || "Nigeria")}
+                </div>
+
+                ${
+                    item.condition
+                    ?
+                    `
+                    <span class="condition">
+                        ${escapeHtml(item.condition)}
+                    </span>
+                    `
+                    :
+                    ""
+                }
+
+            </div>
+        `;
+
+
+        container.appendChild(card);
+    });
+}
+
+
+/* =========================
+   SEARCH
+========================= */
+
+function searchListings() {
+
+    currentSearch =
+        document
+            .getElementById("searchInput")
+            .value
+            .trim();
+
+    applyFilters();
+}
+
+
+/* SEARCH WHEN ENTER IS PRESSED */
+
+document
+    .getElementById("searchInput")
+    .addEventListener("keydown", function(event) {
+
+        if (event.key === "Enter") {
+
+            searchListings();
+        }
+    });
+
+
+/* =========================
+   CATEGORY
+========================= */
+
+function filterListings() {
+
+    currentCategory =
+        document
+            .getElementById("categoryFilter")
+            .value;
+
+    applyFilters();
+}
+
+
+/* =========================
+   OPEN LISTING
+========================= */
+
+function openListing(id) {
+
+    window.location.href =
+        "listing.html?id=" +
+        encodeURIComponent(id);
+}
+
+
+/* =========================
+   URL PARAMETERS
+========================= */
+
+function readUrlParameters() {
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const search =
+        params.get("search");
+
+    const category =
+        params.get("category");
+
+
+    if (search) {
+
+        currentSearch = search;
+
+        document.getElementById("searchInput")
+            .value = search;
+    }
+
+
+    if (category) {
+
+        currentCategory = category;
+
+        document.getElementById("categoryFilter")
+            .value = category;
+    }
+}
+
+
+/* =========================
+   SECURITY
+========================= */
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+function escapeAttribute(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+
+/* =========================
+   START
+========================= */
+
+readUrlParameters();
+
+loadListings();
+
+</script>
+
+</body>
+</html>
