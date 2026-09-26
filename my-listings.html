@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Listings - MaraMarket</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f7fb;
+    color: #172033;
+}
+
+header {
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.logo {
+    color: #1769ff;
+    font-size: 23px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.back {
+    color: #1769ff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 25px 18px 50px;
+}
+
+h1 {
+    font-size: 28px;
+    margin-bottom: 6px;
+}
+
+.subtitle {
+    color: #6b7280;
+    margin-bottom: 25px;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    border: none;
+    border-radius: 10px;
+    padding: 12px 17px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.sell-btn {
+    background: #1769ff;
+    color: white;
+}
+
+.account-btn {
+    background: white;
+    color: #1769ff;
+    border: 1px solid #dbe3f0;
+}
+
+.loading,
+.empty,
+.error {
+    background: white;
+    border-radius: 16px;
+    padding: 35px 20px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,.05);
+}
+
+.error {
+    color: #b42318;
+}
+
+.listing {
+    background: white;
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 16px;
+    box-shadow: 0 5px 20px rgba(0,0,0,.05);
+    display: flex;
+    gap: 18px;
+    align-items: center;
+}
+
+.image {
+    width: 130px;
+    height: 110px;
+    border-radius: 12px;
+    background: #eef3fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.info {
+    flex: 1;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 750;
+    margin-bottom: 7px;
+}
+
+.price {
+    color: #1769ff;
+    font-size: 19px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.location {
+    color: #6b7280;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.badge {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.pending {
+    background: #fff4cc;
+    color: #8a6500;
+}
+
+.active {
+    background: #dff8e7;
+    color: #08752d;
+}
+
+.sold {
+    background: #e8e8e8;
+    color: #555;
+}
+
+.rejected {
+    background: #ffe1e1;
+    color: #a40000;
+}
+
+.expired {
+    background: #eee;
+    color: #666;
+}
+
+.deleted {
+    background: #ffe1e1;
+    color: #a40000;
+}
+
+.payment {
+    background: #eef3ff;
+    color: #315bb5;
+}
+
+.details {
+    min-width: 130px;
+    text-align: right;
+}
+
+.views {
+    color: #6b7280;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.view-btn {
+    background: #1769ff;
+    color: white;
+    border-radius: 9px;
+    padding: 9px 12px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+    display: inline-block;
+}
+
+@media (max-width: 650px) {
+    .listing {
+        align-items: flex-start;
+    }
+
+    .image {
+        width: 90px;
+        height: 90px;
+    }
+
+    .title {
+        font-size: 17px;
+    }
+
+    .price {
+        font-size: 17px;
+    }
+
+    .details {
+        min-width: auto;
+    }
+
+    .views {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .listing {
+        flex-wrap: wrap;
+    }
+
+    .details {
+        width: 100%;
+        text-align: left;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <a href="index.html" class="logo">MaraMarket</a>
+    <a href="account.html" class="back">← Account</a>
+</header>
+
+<div class="container">
+
+    <h1>My Listings</h1>
+    <p class="subtitle">
+        Manage the products you have listed on MaraMarket.
+    </p>
+
+    <div class="actions">
+        <a href="sell.html" class="btn sell-btn">
+            + Sell Something
+        </a>
+
+        <a href="account.html" class="btn account-btn">
+            My Account
+        </a>
+    </div>
+
+    <div id="listingsContainer">
+        <div class="loading">
+            Loading your listings...
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+const SUPABASE_URL =
+    "https://hakjsjmexinuiwhxejva.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_OjO3jp9ZlV0N2WHHBddN8g_rryvMoAL";
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
+const container =
+    document.getElementById("listingsContainer");
+
+
+function formatPrice(price) {
+
+    if (price === null || price === undefined) {
+        return "Price not set";
+    }
+
+    return "₦" + Number(price).toLocaleString("en-NG");
+}
+
+
+function escapeHtml(value) {
+
+    if (value === null || value === undefined) {
+        return "";
+    }
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+function getStatusClass(status) {
+
+    const allowed = [
+        "pending",
+        "active",
+        "sold",
+        "rejected",
+        "expired",
+        "deleted"
+    ];
+
+    return allowed.includes(status)
+        ? status
+        : "pending";
+}
+
+
+function getImage(listing) {
+
+    if (
+        Array.isArray(listing.image_urls) &&
+        listing.image_urls.length > 0
+    ) {
+        return `
+            <img
+                src="${escapeHtml(listing.image_urls[0])}"
+                alt="${escapeHtml(listing.title)}"
+            >
+        `;
+    }
+
+    return "🛍️";
+}
+
+
+async function loadMyListings() {
+
+    const {
+        data: {
+            session
+        },
+        error: sessionError
+    } = await supabaseClient.auth.getSession();
+
+    if (sessionError || !session) {
+
+        window.location.href =
+            "login.html?redirect=my-listings.html";
+
+        return;
+    }
+
+    const user = session.user;
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("listings")
+        .select(`
+            id,
+            title,
+            price,
+            condition,
+            state,
+            city,
+            area,
+            status,
+            payment_status,
+            views,
+            favorites_count,
+            image_urls,
+            created_at
+        `)
+        .eq("seller_id", user.id)
+        .order("created_at", {
+            ascending: false
+        });
+
+    if (error) {
+
+        console.error(error);
+
+        container.innerHTML = `
+            <div class="error">
+                <h3>Could not load your listings</h3>
+                <p style="margin-top:8px;">
+                    ${escapeHtml(error.message)}
+                </p>
+            </div>
+        `;
+
+        return;
+    }
+
+    if (!data || data.length === 0) {
+
+        container.innerHTML = `
+            <div class="empty">
+                <div style="font-size:50px;">📦</div>
+
+                <h2 style="margin-top:12px;">
+                    No listings yet
+                </h2>
+
+                <p style="color:#6b7280;margin:10px 0 20px;">
+                    You haven't posted anything on MaraMarket yet.
+                </p>
+
+                <a href="sell.html"
+                   class="btn sell-btn">
+                    Sell Something
+                </a>
+            </div>
+        `;
+
+        return;
+    }
+
+    container.innerHTML =
+        data.map(listing => {
+
+            const status =
+                listing.status || "pending";
+
+            const payment =
+                listing.payment_status || "pending";
+
+            const location =
+                [
+                    listing.area,
+                    listing.city,
+                    listing.state
+                ]
+                .filter(Boolean)
+                .join(", ");
+
+            return `
+                <div class="listing">
+
+                    <div class="image">
+                        ${getImage(listing)}
+                    </div>
+
+                    <div class="info">
+
+                        <div class="title">
+                            ${escapeHtml(listing.title)}
+                        </div>
+
+                        <div class="price">
+                            ${formatPrice(listing.price)}
+                        </div>
+
+                        <div class="location">
+                            📍 ${escapeHtml(
+                                location || "Location not set"
+                            )}
+                        </div>
+
+                        <div class="meta">
+
+                            <span class="badge ${getStatusClass(status)}">
+                                ${escapeHtml(
+                                    status.toUpperCase()
+                                )}
+                            </span>
+
+                            <span class="badge payment">
+                                Payment:
+                                ${escapeHtml(
+                                    payment.toUpperCase()
+                                )}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="details">
+
+                        <div class="views">
+                            👁 ${Number(listing.views || 0)}
+                            &nbsp;&nbsp;
+                            ❤️ ${Number(
+                                listing.favorites_count || 0
+                            )}
+                        </div>
+
+                        ${
+                            status === "active"
+                            ?
+                            `
+                            <a
+                                href="listing.html?id=${encodeURIComponent(listing.id)}"
+                                class="view-btn"
+                            >
+                                View Listing
+                            </a>
+                            `
+                            :
+                            `
+                            <span
+                                style="
+                                color:#8b95a7;
+                                font-size:13px;
+                                font-weight:600;
+                                "
+                            >
+                                Not public yet
+                            </span>
+                            `
+                        }
+
+                    </div>
+
+                </div>
+            `;
+
+        }).join("");
+}
+
+
+loadMyListings();
+
+</script>
+
+</body>
+</html>
