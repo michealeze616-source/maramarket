@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Listing - MaraMarket</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f7fb;
+    color: #172033;
+}
+
+header {
+    background: #0d6efd;
+    color: white;
+    padding: 16px 20px;
+}
+
+.header-inner {
+    max-width: 1100px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    color: white;
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.home {
+    color: white;
+    text-decoration: none;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 25px auto;
+    padding: 0 16px;
+}
+
+.back {
+    display: inline-block;
+    margin-bottom: 18px;
+    color: #0d6efd;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.product {
+    background: white;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 5px 25px rgba(0,0,0,.07);
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: 1fr 120px;
+    gap: 12px;
+}
+
+.main-image {
+    height: 450px;
+    background: #edf1f6;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.main-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.placeholder {
+    font-size: 70px;
+}
+
+.thumbnails {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+}
+
+.thumbnail {
+    width: 100%;
+    height: 90px;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    background: #edf1f6;
+}
+
+.thumbnail.active {
+    border-color: #0d6efd;
+}
+
+.thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.details {
+    margin-top: 25px;
+}
+
+.title-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.title {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.favorite {
+    border: none;
+    background: #f0f3f8;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    font-size: 23px;
+    cursor: pointer;
+}
+
+.price {
+    color: #0d6efd;
+    font-size: 29px;
+    font-weight: bold;
+    margin-top: 12px;
+}
+
+.info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.badge {
+    background: #eef4ff;
+    color: #0d6efd;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+.section {
+    margin-top: 25px;
+    padding-top: 22px;
+    border-top: 1px solid #e4e8ee;
+}
+
+.section h2 {
+    font-size: 19px;
+    margin-bottom: 12px;
+}
+
+.description {
+    color: #4d596b;
+    line-height: 1.7;
+    white-space: pre-wrap;
+}
+
+.location {
+    color: #4d596b;
+    line-height: 1.7;
+}
+
+.actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.action {
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.whatsapp {
+    background: #198754;
+    color: white;
+}
+
+.phone {
+    background: #0d6efd;
+    color: white;
+}
+
+.views {
+    color: #788397;
+    font-size: 13px;
+    margin-top: 15px;
+}
+
+.loading,
+.error {
+    background: white;
+    border-radius: 15px;
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.error {
+    color: #b42318;
+}
+
+@media(max-width:700px) {
+
+    .gallery {
+        grid-template-columns: 1fr;
+    }
+
+    .main-image {
+        height: 330px;
+    }
+
+    .thumbnails {
+        flex-direction: row;
+        overflow-x: auto;
+    }
+
+    .thumbnail {
+        min-width: 80px;
+        height: 80px;
+    }
+
+    .title {
+        font-size: 23px;
+    }
+
+    .price {
+        font-size: 24px;
+    }
+
+    .actions {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-inner">
+
+        <a href="index.html" class="logo">
+            MaraMarket
+        </a>
+
+        <a href="browse.html" class="home">
+            Browse
+        </a>
+
+    </div>
+</header>
+
+
+<main class="container">
+
+    <a href="browse.html" class="back">
+        ← Back to listings
+    </a>
+
+    <div id="loading" class="loading">
+        <p>Loading listing...</p>
+    </div>
+
+    <div id="error" class="error" style="display:none;">
+    </div>
+
+    <div id="product" class="product" style="display:none;">
+
+        <div class="gallery">
+
+            <div class="main-image" id="mainImage">
+                <div class="placeholder">🛍️</div>
+            </div>
+
+            <div class="thumbnails" id="thumbnails"></div>
+
+        </div>
+
+
+        <div class="details">
+
+            <div class="title-row">
+
+                <div class="title" id="title">
+                </div>
+
+                <button
+                    class="favorite"
+                    id="favoriteButton"
+                    onclick="toggleFavorite()">
+                    ♡
+                </button>
+
+            </div>
+
+
+            <div class="price" id="price">
+            </div>
+
+
+            <div class="info">
+
+                <span class="badge" id="condition">
+                </span>
+
+                <span class="badge" id="brand" style="display:none;">
+                </span>
+
+                <span class="badge" id="model" style="display:none;">
+                </span>
+
+            </div>
+
+
+            <div class="section">
+
+                <h2>Description</h2>
+
+                <div
+                    class="description"
+                    id="description">
+                </div>
+
+            </div>
+
+
+            <div class="section">
+
+                <h2>Location</h2>
+
+                <div
+                    class="location"
+                    id="location">
+                </div>
+
+            </div>
+
+
+            <div class="section">
+
+                <h2>Contact Seller</h2>
+
+                <div
+                    class="actions"
+                    id="contactActions">
+                </div>
+
+            </div>
+
+
+            <div
+                class="views"
+                id="views">
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<script>
+
+/* =========================
+   SUPABASE
+========================= */
+
+const SUPABASE_URL =
+    "https://hakjsjmexinuiwhxejva.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_OjO3jp9ZlV0N2WHHBddN8g_rryvMoAL";
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+let listing = null;
+
+
+/* =========================
+   GET LISTING ID
+========================= */
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+const listingId =
+    params.get("id");
+
+
+/* =========================
+   LOAD LISTING
+========================= */
+
+async function loadListing() {
+
+    if (!listingId) {
+
+        showError(
+            "No listing was selected."
+        );
+
+        return;
+    }
+
+
+    const { data, error } =
+        await supabaseClient
+            .from("listings")
+            .select(`
+                id,
+                seller_id,
+                title,
+                description,
+                price,
+                condition,
+                brand,
+                model,
+                state,
+                city,
+                area,
+                whatsapp,
+                phone,
+                instagram,
+                telegram,
+                tiktok,
+                status,
+                views,
+                favorites_count,
+                image_urls,
+                created_at
+            `)
+            .eq("id", listingId)
+            .eq("status", "active")
+            .maybeSingle();
+
+
+    if (error) {
+
+        console.error(error);
+
+        showError(
+            "Could not load this listing: " +
+            error.message
+        );
+
+        return;
+    }
+
+
+    if (!data) {
+
+        showError(
+            "This listing is not available or has not been published yet."
+        );
+
+        return;
+    }
+
+
+    listing = data;
+
+    displayListing(listing);
+
+    increaseViews(listing.id, listing.views || 0);
+}
+
+
+/* =========================
+   DISPLAY LISTING
+========================= */
+
+function displayListing(item) {
+
+    document.title =
+        (item.title || "Listing") +
+        " - MaraMarket";
+
+
+    document.getElementById("loading")
+        .style.display = "none";
+
+    document.getElementById("product")
+        .style.display = "block";
+
+
+    document.getElementById("title")
+        .textContent =
+            item.title || "Untitled listing";
+
+
+    document.getElementById("price")
+        .textContent =
+            "₦" +
+            Number(item.price || 0)
+                .toLocaleString();
+
+
+    document.getElementById("condition")
+        .textContent =
+            item.condition || "Condition not specified";
+
+
+    if (item.brand) {
+
+        const brand =
+            document.getElementById("brand");
+
+        brand.textContent =
+            "Brand: " + item.brand;
+
+        brand.style.display = "inline-block";
+    }
+
+
+    if (item.model) {
+
+        const model =
+            document.getElementById("model");
+
+        model.textContent =
+            "Model: " + item.model;
+
+        model.style.display = "inline-block";
+    }
+
+
+    document.getElementById("description")
+        .textContent =
+            item.description ||
+            "No description provided.";
+
+
+    const location =
+        [
+            item.area,
+            item.city,
+            item.state
+        ]
+        .filter(Boolean)
+        .join(", ");
+
+
+    document.getElementById("location")
+        .textContent =
+            location || "Nigeria";
+
+
+    document.getElementById("views")
+        .textContent =
+            "👁 " +
+            Number(item.views || 0) +
+            " views";
+
+
+    displayImages(item.image_urls);
+
+    displayContacts(item);
+}
+
+
+/* =========================
+   IMAGES
+========================= */
+
+function displayImages(images) {
+
+    const main =
+        document.getElementById("mainImage");
+
+    const thumbnails =
+        document.getElementById("thumbnails");
+
+
+    main.innerHTML = "";
+
+    thumbnails.innerHTML = "";
+
+
+    if (
+        !Array.isArray(images) ||
+        images.length === 0
+    ) {
+
+        main.innerHTML =
+            `<div class="placeholder">🛍️</div>`;
+
+        return;
+    }
+
+
+    const validImages =
+        images.filter(Boolean);
+
+
+    if (!validImages.length) {
+
+        main.innerHTML =
+            `<div class="placeholder">🛍️</div>`;
+
+        return;
+    }
+
+
+    showMainImage(validImages[0]);
+
+
+    validImages.forEach(
+        (url, index) => {
+
+            const thumbnail =
+                document.createElement("div");
+
+            thumbnail.className =
+                "thumbnail" +
+                (index === 0 ? " active" : "");
+
+
+            thumbnail.innerHTML = `
+                <img
+                    src="${escapeAttribute(url)}"
+                    alt="Product image"
+                >
+            `;
+
+
+            thumbnail.onclick =
+                function() {
+
+                    document
+                        .querySelectorAll(".thumbnail")
+                        .forEach(el =>
+                            el.classList.remove("active")
+                        );
+
+                    thumbnail.classList.add("active");
+
+                    showMainImage(url);
+                };
+
+
+            thumbnails.appendChild(thumbnail);
+        }
+    );
+}
+
+
+/* MAIN IMAGE */
+
+function showMainImage(url) {
+
+    const main =
+        document.getElementById("mainImage");
+
+    main.innerHTML = `
+        <img
+            src="${escapeAttribute(url)}"
+            alt="${escapeAttribute(
+                listing?.title || "Product"
+            )}"
+            onerror="this.parentElement.innerHTML='<div class=&quot;placeholder&quot;>🛍️</div>';"
+        >
+    `;
+}
+
+
+/* =========================
+   CONTACT BUTTONS
+========================= */
+
+function displayContacts(item) {
+
+    const actions =
+        document.getElementById("contactActions");
+
+    actions.innerHTML = "";
+
+
+    if (item.whatsapp) {
+
+        const whatsapp =
+            cleanPhone(item.whatsapp);
+
+        const whatsappLink =
+            document.createElement("a");
+
+        whatsappLink.className =
+            "action whatsapp";
+
+        whatsappLink.target = "_blank";
+
+        whatsappLink.rel = "noopener";
+
+        whatsappLink.href =
+            "https://wa.me/" +
+            whatsapp;
+
+        whatsappLink.textContent =
+            "💬 WhatsApp Seller";
+
+        actions.appendChild(whatsappLink);
+    }
+
+
+    if (item.phone) {
+
+        const phone =
+            cleanPhone(item.phone);
+
+        const phoneLink =
+            document.createElement("a");
+
+        phoneLink.className =
+            "action phone";
+
+        phoneLink.href =
+            "tel:" + phone;
+
+        phoneLink.textContent =
+            "📞 Call Seller";
+
+        actions.appendChild(phoneLink);
+    }
+
+
+    if (!item.whatsapp && !item.phone) {
+
+        actions.innerHTML = `
+            <p>
+                Seller contact information is not available yet.
+            </p>
+        `;
+    }
+}
+
+
+/* =========================
+   PHONE CLEANING
+========================= */
+
+function cleanPhone(number) {
+
+    let phone =
+        String(number)
+            .replace(/\D/g, "");
+
+
+    if (phone.startsWith("0")) {
+
+        phone =
+            "234" + phone.substring(1);
+    }
+
+
+    if (phone.startsWith("234")) {
+
+        return phone;
+    }
+
+
+    return phone;
+}
+
+
+/* =========================
+   VIEW COUNT
+========================= */
+
+async function increaseViews(id, currentViews) {
+
+    const newViews =
+        Number(currentViews || 0) + 1;
+
+
+    const { error } =
+        await supabaseClient
+            .from("listings")
+            .update({
+                views: newViews
+            })
+            .eq("id", id);
+
+
+    if (error) {
+
+        console.log(
+            "View count could not be updated:",
+            error.message
+        );
+
+        return;
+    }
+
+
+    document.getElementById("views")
+        .textContent =
+            "👁 " + newViews + " views";
+}
+
+
+/* =========================
+   FAVORITES
+========================= */
+
+function toggleFavorite() {
+
+    const button =
+        document.getElementById("favoriteButton");
+
+
+    if (button.textContent === "♡") {
+
+        button.textContent = "♥";
+
+    } else {
+
+        button.textContent = "♡";
+    }
+}
+
+
+/* =========================
+   ERROR
+========================= */
+
+function showError(message) {
+
+    document.getElementById("loading")
+        .style.display = "none";
+
+    const error =
+        document.getElementById("error");
+
+    error.textContent = message;
+
+    error.style.display = "block";
+}
+
+
+/* =========================
+   SECURITY
+========================= */
+
+function escapeAttribute(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+
+/* =========================
+   START
+========================= */
+
+loadListing();
+
+</script>
+
+</body>
+</html>
