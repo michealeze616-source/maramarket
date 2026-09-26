@@ -6,6 +6,8 @@
 
     <title>Sell an Item — MaraMarket</title>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
         * {
             box-sizing: border-box;
@@ -61,6 +63,21 @@
 
         .heading p {
             color: #627d98;
+        }
+
+        .login-warning {
+            display: none;
+            background: #fff3cd;
+            color: #664d03;
+            padding: 18px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .login-warning a {
+            color: #0757c9;
+            font-weight: bold;
         }
 
         .progress {
@@ -158,6 +175,12 @@
             background: transparent;
         }
 
+        .selected-photos {
+            margin-top: 15px;
+            color: #52667a;
+            font-size: 14px;
+        }
+
         .required {
             color: #e63946;
         }
@@ -203,6 +226,11 @@
             cursor: pointer;
         }
 
+        button:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
         .back {
             background: #e5eef8;
             color: #31526e;
@@ -246,6 +274,48 @@
             line-height: 1.5;
         }
 
+        .success {
+            display: none;
+            text-align: center;
+            padding: 30px 10px;
+        }
+
+        .success .success-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        .success h2 {
+            color: #15803d;
+            margin-bottom: 10px;
+        }
+
+        .success p {
+            color: #627d98;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .success a {
+            display: inline-block;
+            background: #0878ed;
+            color: white;
+            padding: 13px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .error-message {
+            display: none;
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 14px;
+            border-radius: 12px;
+            margin-top: 15px;
+            line-height: 1.5;
+        }
+
         @media(max-width:600px) {
             .container {
                 margin: 25px auto;
@@ -283,15 +353,24 @@
     </div>
 
 
-    <div class="progress">
+    <div class="login-warning" id="loginWarning">
+        🔐 You need to be logged in before you can sell an item.
+        <br><br>
+        <a href="login.html">Sign in to MaraMarket</a>
+    </div>
+
+
+    <div class="progress" id="progress">
+
         <div class="active" id="p1">1</div>
         <div id="p2">2</div>
         <div id="p3">3</div>
         <div id="p4">4</div>
+
     </div>
 
 
-    <div class="card">
+    <div class="card" id="sellCard">
 
         <!-- STEP 1 -->
 
@@ -320,12 +399,22 @@
                     id="photos"
                 >
 
+                <div class="selected-photos" id="selectedPhotos">
+                    No photos selected.
+                </div>
+
             </div>
 
+
             <div class="buttons">
-                <button class="next" onclick="nextStep(1)">
+
+                <button
+                    class="next"
+                    onclick="nextStep(1)"
+                >
                     Continue →
                 </button>
+
             </div>
 
         </div>
@@ -341,7 +430,11 @@
                 Tell buyers about the item you're selling.
             </p>
 
-            <label>Item title</label>
+
+            <label>
+                Item title
+                <span class="required">*</span>
+            </label>
 
             <input
                 type="text"
@@ -350,7 +443,10 @@
             >
 
 
-            <label>Category</label>
+            <label>
+                Category
+                <span class="required">*</span>
+            </label>
 
             <select id="category">
 
@@ -371,7 +467,10 @@
             </select>
 
 
-            <label>Condition</label>
+            <label>
+                Condition
+                <span class="required">*</span>
+            </label>
 
             <select id="condition">
 
@@ -384,16 +483,47 @@
             </select>
 
 
-            <label>Price (₦)</label>
+            <label>
+                Brand
+                <span class="optional">(optional)</span>
+            </label>
+
+            <input
+                type="text"
+                id="brand"
+                placeholder="Example: Apple"
+            >
+
+
+            <label>
+                Model
+                <span class="optional">(optional)</span>
+            </label>
+
+            <input
+                type="text"
+                id="model"
+                placeholder="Example: iPhone 15 Pro Max"
+            >
+
+
+            <label>
+                Price (₦)
+                <span class="required">*</span>
+            </label>
 
             <input
                 type="number"
                 id="price"
                 placeholder="Example: 250000"
+                min="0"
             >
 
 
-            <label>Description</label>
+            <label>
+                Description
+                <span class="required">*</span>
+            </label>
 
             <textarea
                 id="description"
@@ -403,11 +533,17 @@
 
             <div class="buttons">
 
-                <button class="back" onclick="previousStep(2)">
+                <button
+                    class="back"
+                    onclick="previousStep(2)"
+                >
                     ← Back
                 </button>
 
-                <button class="next" onclick="nextStep(2)">
+                <button
+                    class="next"
+                    onclick="nextStep(2)"
+                >
                     Continue →
                 </button>
 
@@ -427,7 +563,10 @@
             </p>
 
 
-            <label>State</label>
+            <label>
+                State
+                <span class="required">*</span>
+            </label>
 
             <select id="state">
 
@@ -474,12 +613,27 @@
             </select>
 
 
-            <label>City / Area</label>
+            <label>
+                City
+                <span class="required">*</span>
+            </label>
 
             <input
                 type="text"
-                id="location"
+                id="city"
                 placeholder="Example: Ikeja"
+            >
+
+
+            <label>
+                Area
+                <span class="required">*</span>
+            </label>
+
+            <input
+                type="text"
+                id="area"
+                placeholder="Example: Allen Avenue"
             >
 
 
@@ -494,10 +648,23 @@
                 placeholder="08012345678"
             >
 
+
             <div class="whatsapp-note">
                 🟢 A WhatsApp number is required because buyers
                 need a way to contact sellers.
             </div>
+
+
+            <label>
+                Phone
+                <span class="optional">(optional)</span>
+            </label>
+
+            <input
+                type="tel"
+                id="phone"
+                placeholder="08012345678"
+            >
 
 
             <label>
@@ -538,11 +705,17 @@
 
             <div class="buttons">
 
-                <button class="back" onclick="previousStep(3)">
+                <button
+                    class="back"
+                    onclick="previousStep(3)"
+                >
                     ← Back
                 </button>
 
-                <button class="next" onclick="nextStep(3)">
+                <button
+                    class="next"
+                    onclick="nextStep(3)"
+                >
                     Preview →
                 </button>
 
@@ -580,6 +753,16 @@
                 </div>
 
                 <div class="preview-row">
+                    <div class="preview-label">Brand</div>
+                    <span id="previewBrand">—</span>
+                </div>
+
+                <div class="preview-row">
+                    <div class="preview-label">Model</div>
+                    <span id="previewModel">—</span>
+                </div>
+
+                <div class="preview-row">
                     <div class="preview-label">Price</div>
                     <strong id="previewPrice">—</strong>
                 </div>
@@ -594,34 +777,84 @@
                     <span id="previewWhatsapp">—</span>
                 </div>
 
+                <div class="preview-row">
+                    <div class="preview-label">Photos</div>
+                    <span id="previewPhotos">—</span>
+                </div>
+
             </div>
 
 
             <div class="fee">
 
-                <small>Marketplace listing fee</small>
+                <small>
+                    Marketplace listing fee
+                </small>
 
-                <strong>₦1,000</strong>
+                <strong>
+                    ₦1,000
+                </strong>
 
                 <p style="margin-top:8px;color:#52667a;">
-                    Payment is required before your listing
-                    can be published.
+                    Your listing will be saved as pending payment.
+                    It will not be published until payment is verified.
                 </p>
 
             </div>
 
 
+            <div
+                class="error-message"
+                id="errorMessage"
+            ></div>
+
+
             <div class="buttons">
 
-                <button class="back" onclick="previousStep(4)">
+                <button
+                    class="back"
+                    onclick="previousStep(4)"
+                    id="backButton"
+                >
                     ← Edit
                 </button>
 
-                <button class="publish" onclick="startPayment()">
+                <button
+                    class="publish"
+                    onclick="saveListing()"
+                    id="publishButton"
+                >
                     Continue to Payment →
                 </button>
 
             </div>
+
+        </div>
+
+
+        <!-- SUCCESS -->
+
+        <div
+            class="success"
+            id="successScreen"
+        >
+
+            <div class="success-icon">
+                ✅
+            </div>
+
+            <h2>
+                Listing Saved!
+            </h2>
+
+            <p>
+                Your listing has been saved successfully
+                and is currently waiting for payment verification.
+            </p>
+
+            <a href="index.html">
+                Return to MaraMarket
+            </a>
 
         </div>
 
@@ -632,134 +865,761 @@
 
 <script>
 
+    /* =========================================
+       SUPABASE
+    ========================================= */
+
+    const SUPABASE_URL =
+        "https://hakjsjmexinuiwhxejva.supabase.co";
+
+    const SUPABASE_PUBLISHABLE_KEY =
+        "sb_publishable_OjO3jp9ZlV0N2WHHBddN8g_rryvMoAL";
+
+
+    const supabaseClient =
+        window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_PUBLISHABLE_KEY
+        );
+
+
+    let currentUser = null;
     let currentStep = 1;
 
 
-    function showStep(step) {
+    /* =========================================
+       CHECK LOGIN
+    ========================================= */
 
-        document.querySelectorAll(".step").forEach(function(element) {
-            element.classList.remove("active");
-        });
+    async function checkLogin() {
 
-        document.getElementById("step" + step).classList.add("active");
+        const {
+            data,
+            error
+        } = await supabaseClient.auth.getSession();
 
 
-        document.querySelectorAll(".progress div").forEach(function(element) {
-            element.classList.remove("active");
-        });
+        if (error) {
 
-        for(let i = 1; i <= step; i++) {
-            document.getElementById("p" + i).classList.add("active");
+            console.error(
+                "Session error:",
+                error
+            );
+
+            showLoginWarning();
+
+            return false;
         }
 
+
+        if (
+            !data.session ||
+            !data.session.user
+        ) {
+
+            showLoginWarning();
+
+            return false;
+        }
+
+
+        currentUser =
+            data.session.user;
+
+        return true;
+    }
+
+
+    function showLoginWarning() {
+
+        document.getElementById(
+            "loginWarning"
+        ).style.display = "block";
+
+
+        document.getElementById(
+            "progress"
+        ).style.display = "none";
+
+
+        document.getElementById(
+            "sellCard"
+        ).style.display = "none";
+
+    }
+
+
+    /* =========================================
+       SHOW STEP
+    ========================================= */
+
+    function showStep(step) {
+
+        document
+            .querySelectorAll(".step")
+            .forEach(function(element) {
+
+                element.classList.remove(
+                    "active"
+                );
+
+            });
+
+
+        document
+            .getElementById("step" + step)
+            .classList.add("active");
+
+
+        document
+            .querySelectorAll(".progress div")
+            .forEach(function(element) {
+
+                element.classList.remove(
+                    "active"
+                );
+
+            });
+
+
+        for (
+            let i = 1;
+            i <= step;
+            i++
+        ) {
+
+            document
+                .getElementById("p" + i)
+                .classList.add("active");
+
+        }
+
+
         currentStep = step;
+
 
         window.scrollTo({
             top: 0,
             behavior: "smooth"
         });
+
     }
 
 
+    /* =========================================
+       NEXT STEP
+    ========================================= */
+
     function nextStep(step) {
 
-        if(step === 1) {
+        if (step === 1) {
 
-            const photos = document.getElementById("photos");
+            const photos =
+                document.getElementById(
+                    "photos"
+                );
 
-            if(photos.files.length === 0) {
-                alert("Please add at least one photo.");
+
+            if (
+                !photos.files ||
+                photos.files.length === 0
+            ) {
+
+                alert(
+                    "Please add at least one photo."
+                );
+
                 return;
             }
 
-            if(photos.files.length > 10) {
-                alert("You can upload a maximum of 10 photos.");
+
+            if (photos.files.length > 10) {
+
+                alert(
+                    "You can upload a maximum of 10 photos."
+                );
+
                 return;
             }
+
         }
 
 
-        if(step === 2) {
+        if (step === 2) {
 
-            const title = document.getElementById("title").value.trim();
-            const category = document.getElementById("category").value;
-            const condition = document.getElementById("condition").value;
-            const price = document.getElementById("price").value;
-            const description = document.getElementById("description").value.trim();
+            const title =
+                document.getElementById(
+                    "title"
+                ).value.trim();
 
 
-            if(!title || !category || !condition || !price || !description) {
+            const category =
+                document.getElementById(
+                    "category"
+                ).value;
 
-                alert("Please complete all item details.");
+
+            const condition =
+                document.getElementById(
+                    "condition"
+                ).value;
+
+
+            const price =
+                document.getElementById(
+                    "price"
+                ).value;
+
+
+            const description =
+                document.getElementById(
+                    "description"
+                ).value.trim();
+
+
+            if (
+                !title ||
+                !category ||
+                !condition ||
+                !price ||
+                !description
+            ) {
+
+                alert(
+                    "Please complete all required item details."
+                );
 
                 return;
             }
+
+
+            if (Number(price) <= 0) {
+
+                alert(
+                    "Please enter a valid price."
+                );
+
+                return;
+            }
+
         }
 
 
-        if(step === 3) {
+        if (step === 3) {
 
-            const state = document.getElementById("state").value;
-            const location = document.getElementById("location").value.trim();
-            const whatsapp = document.getElementById("whatsapp").value.trim();
+            const state =
+                document.getElementById(
+                    "state"
+                ).value;
 
 
-            if(!state || !location || !whatsapp) {
+            const city =
+                document.getElementById(
+                    "city"
+                ).value.trim();
 
-                alert("State, location and WhatsApp number are required.");
+
+            const area =
+                document.getElementById(
+                    "area"
+                ).value.trim();
+
+
+            const whatsapp =
+                document.getElementById(
+                    "whatsapp"
+                ).value.trim();
+
+
+            if (
+                !state ||
+                !city ||
+                !area ||
+                !whatsapp
+            ) {
+
+                alert(
+                    "State, city, area and WhatsApp number are required."
+                );
 
                 return;
             }
 
 
             updatePreview();
+
         }
 
 
         showStep(step + 1);
+
     }
 
+
+    /* =========================================
+       PREVIOUS STEP
+    ========================================= */
 
     function previousStep(step) {
 
         showStep(step - 1);
+
     }
 
+
+    /* =========================================
+       UPDATE PHOTO COUNT
+    ========================================= */
+
+    document
+        .getElementById("photos")
+        .addEventListener(
+            "change",
+            function() {
+
+                const count =
+                    this.files.length;
+
+
+                const display =
+                    document.getElementById(
+                        "selectedPhotos"
+                    );
+
+
+                if (count === 0) {
+
+                    display.textContent =
+                        "No photos selected.";
+
+                } else {
+
+                    display.textContent =
+                        count +
+                        " photo" +
+                        (count === 1 ? "" : "s") +
+                        " selected.";
+
+                }
+
+            }
+        );
+
+
+    /* =========================================
+       PREVIEW
+    ========================================= */
 
     function updatePreview() {
 
-        document.getElementById("previewTitle").textContent =
-            document.getElementById("title").value;
+        const photos =
+            document.getElementById(
+                "photos"
+            ).files;
 
-        document.getElementById("previewCategory").textContent =
-            document.getElementById("category").value;
 
-        document.getElementById("previewCondition").textContent =
-            document.getElementById("condition").value;
+        document.getElementById(
+            "previewTitle"
+        ).textContent =
+            document.getElementById(
+                "title"
+            ).value;
 
-        document.getElementById("previewPrice").textContent =
-            "₦" + Number(document.getElementById("price").value).toLocaleString();
 
-        document.getElementById("previewLocation").textContent =
-            document.getElementById("state").value +
+        document.getElementById(
+            "previewCategory"
+        ).textContent =
+            document.getElementById(
+                "category"
+            ).value;
+
+
+        document.getElementById(
+            "previewCondition"
+        ).textContent =
+            document.getElementById(
+                "condition"
+            ).value;
+
+
+        document.getElementById(
+            "previewBrand"
+        ).textContent =
+            document.getElementById(
+                "brand"
+            ).value || "Not specified";
+
+
+        document.getElementById(
+            "previewModel"
+        ).textContent =
+            document.getElementById(
+                "model"
+            ).value || "Not specified";
+
+
+        document.getElementById(
+            "previewPrice"
+        ).textContent =
+            "₦" +
+            Number(
+                document.getElementById(
+                    "price"
+                ).value
+            ).toLocaleString();
+
+
+        document.getElementById(
+            "previewLocation"
+        ).textContent =
+            document.getElementById(
+                "state"
+            ).value +
             " — " +
-            document.getElementById("location").value;
+            document.getElementById(
+                "city"
+            ).value +
+            " — " +
+            document.getElementById(
+                "area"
+            ).value;
 
-        document.getElementById("previewWhatsapp").textContent =
-            document.getElementById("whatsapp").value;
+
+        document.getElementById(
+            "previewWhatsapp"
+        ).textContent =
+            document.getElementById(
+                "whatsapp"
+            ).value;
+
+
+        document.getElementById(
+            "previewPhotos"
+        ).textContent =
+            photos.length +
+            " photo" +
+            (photos.length === 1 ? "" : "s");
+
     }
 
 
-    function startPayment() {
+    /* =========================================
+       SAVE LISTING
+    ========================================= */
 
-        alert(
-            "Payment system coming next.\n\n" +
-            "Listing fee: ₦1,000\n\n" +
-            "Your listing will only be published after " +
-            "the payment is successfully verified."
-        );
+    async function saveListing() {
+
+        const button =
+            document.getElementById(
+                "publishButton"
+            );
+
+
+        const errorBox =
+            document.getElementById(
+                "errorMessage"
+            );
+
+
+        errorBox.style.display =
+            "none";
+
+
+        button.disabled = true;
+
+        button.textContent =
+            "Saving listing...";
+
+
+        try {
+
+            const loggedIn =
+                await checkLogin();
+
+
+            if (!loggedIn) {
+
+                button.disabled = false;
+
+                button.textContent =
+                    "Continue to Payment →";
+
+                return;
+
+            }
+
+
+            const title =
+                document.getElementById(
+                    "title"
+                ).value.trim();
+
+
+            const category =
+                document.getElementById(
+                    "category"
+                ).value;
+
+
+            const condition =
+                document.getElementById(
+                    "condition"
+                ).value;
+
+
+            const brand =
+                document.getElementById(
+                    "brand"
+                ).value.trim();
+
+
+            const model =
+                document.getElementById(
+                    "model"
+                ).value.trim();
+
+
+            const price =
+                Number(
+                    document.getElementById(
+                        "price"
+                    ).value
+                );
+
+
+            const description =
+                document.getElementById(
+                    "description"
+                ).value.trim();
+
+
+            const state =
+                document.getElementById(
+                    "state"
+                ).value;
+
+
+            const city =
+                document.getElementById(
+                    "city"
+                ).value.trim();
+
+
+            const area =
+                document.getElementById(
+                    "area"
+                ).value.trim();
+
+
+            const whatsapp =
+                document.getElementById(
+                    "whatsapp"
+                ).value.trim();
+
+
+            const phone =
+                document.getElementById(
+                    "phone"
+                ).value.trim();
+
+
+            const instagram =
+                document.getElementById(
+                    "instagram"
+                ).value.trim();
+
+
+            const telegram =
+                document.getElementById(
+                    "telegram"
+                ).value.trim();
+
+
+            const tiktok =
+                document.getElementById(
+                    "tiktok"
+                ).value.trim();
+
+
+            /*
+             * We intentionally leave category_id
+             * empty for now because your current
+             * form stores category names while your
+             * database uses category_id.
+             *
+             * We'll connect the categories table
+             * properly when we build browse.html.
+             */
+
+
+            const listingData = {
+
+                seller_id:
+                    currentUser.id,
+
+                title:
+                    title,
+
+                description:
+                    description,
+
+                price:
+                    price,
+
+                condition:
+                    condition,
+
+                brand:
+                    brand || null,
+
+                model:
+                    model || null,
+
+                state:
+                    state,
+
+                city:
+                    city,
+
+                area:
+                    area,
+
+                whatsapp:
+                    whatsapp,
+
+                instagram:
+                    instagram || null,
+
+                telegram:
+                    telegram || null,
+
+                tiktok:
+                    tiktok || null,
+
+                phone:
+                    phone || null,
+
+                status:
+                    "pending_payment",
+
+                payment_status:
+                    "pending",
+
+                listing_fee:
+                    1000,
+
+                views:
+                    0,
+
+                favorites_count:
+                    0,
+
+                image_urls:
+                    []
+
+            };
+
+
+            const {
+                data,
+                error
+            } = await supabaseClient
+                .from("listings")
+                .insert(
+                    listingData
+                )
+                .select()
+                .single();
+
+
+            if (error) {
+
+                console.error(
+                    "Listing insert error:",
+                    error
+                );
+
+                throw new Error(
+                    error.message
+                );
+
+            }
+
+
+            console.log(
+                "Listing created:",
+                data
+            );
+
+
+            /*
+             * Payment integration comes next.
+             *
+             * For now the listing is safely stored
+             * as pending_payment.
+             */
+
+
+            document
+                .querySelectorAll(".step")
+                .forEach(function(element) {
+
+                    element.classList.remove(
+                        "active"
+                    );
+
+                });
+
+
+            document.getElementById(
+                "progress"
+            ).style.display = "none";
+
+
+            document.getElementById(
+                "successScreen"
+            ).style.display = "block";
+
+
+            button.disabled = false;
+
+
+        } catch (error) {
+
+            console.error(error);
+
+
+            errorBox.textContent =
+                "Could not save your listing: " +
+                error.message;
+
+
+            errorBox.style.display =
+                "block";
+
+
+            button.disabled = false;
+
+            button.textContent =
+                "Continue to Payment →";
+
+        }
 
     }
+
+
+    /* =========================================
+       INITIALIZE
+    ========================================= */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        async function() {
+
+            await checkLogin();
+
+        }
+    );
 
 </script>
 
