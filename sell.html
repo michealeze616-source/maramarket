@@ -1,1625 +1,769 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sell on MaraMarket</title>
 
-    <title>Sell an Item — MaraMarket</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f7fb;
+    color: #172033;
+}
 
-        body {
-            font-family: Arial, sans-serif;
-            background:
-                radial-gradient(circle at 10% 10%, #cce7ff, transparent 30%),
-                radial-gradient(circle at 90% 30%, #b8dcff, transparent 30%),
-                #eef6ff;
-            color: #102a43;
-            min-height: 100vh;
-        }
+header {
+    background: #0d6efd;
+    color: white;
+    padding: 18px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        header {
-            background: linear-gradient(135deg, #0757c9, #168cff);
-            color: white;
-            padding: 18px 6%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
 
-        .logo {
-            font-size: 25px;
-            font-weight: 800;
-        }
+.back {
+    color: white;
+    text-decoration: none;
+}
 
-        header a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-        }
+.container {
+    max-width: 850px;
+    margin: 30px auto;
+    padding: 0 16px;
+}
 
-        .container {
-            max-width: 850px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
+.card {
+    background: white;
+    border-radius: 18px;
+    padding: 25px;
+    box-shadow: 0 8px 30px rgba(0,0,0,.08);
+}
 
-        .heading {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+h1 {
+    margin-bottom: 8px;
+}
 
-        .heading h1 {
-            font-size: 35px;
-            margin-bottom: 10px;
-        }
+.subtitle {
+    color: #687386;
+    margin-bottom: 25px;
+}
 
-        .heading p {
-            color: #627d98;
-        }
+.step {
+    display: none;
+}
 
-        .login-warning {
-            display: none;
-            background: #fff3cd;
-            color: #664d03;
-            padding: 18px;
-            border-radius: 14px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
+.step.active {
+    display: block;
+}
 
-        .login-warning a {
-            color: #0757c9;
-            font-weight: bold;
-        }
+label {
+    display: block;
+    margin-top: 18px;
+    margin-bottom: 7px;
+    font-weight: bold;
+}
 
-        .progress {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #d7dce5;
+    border-radius: 10px;
+    font-size: 15px;
+    outline: none;
+}
 
-        .progress div {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            background: #cbdff5;
-            color: #52667a;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
+textarea {
+    min-height: 130px;
+    resize: vertical;
+}
 
-        .progress .active {
-            background: #0878ed;
-            color: white;
-        }
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #0d6efd;
+}
 
-        .card {
-            background: rgba(255,255,255,.92);
-            border-radius: 25px;
-            padding: 30px;
-            box-shadow: 0 15px 45px rgba(20,90,160,.12);
-        }
+.buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+}
 
-        .step {
-            display: none;
-        }
+button {
+    border: none;
+    border-radius: 10px;
+    padding: 13px 20px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
 
-        .step.active {
-            display: block;
-        }
+.next {
+    background: #0d6efd;
+    color: white;
+    flex: 1;
+}
 
-        .step h2 {
-            margin-bottom: 10px;
-        }
+.backBtn {
+    background: #e9edf3;
+    color: #172033;
+}
 
-        .step-description {
-            color: #627d98;
-            margin-bottom: 25px;
-        }
+.save {
+    background: #198754;
+    color: white;
+    flex: 1;
+}
 
-        label {
-            display: block;
-            font-weight: bold;
-            margin: 18px 0 8px;
-        }
+.progress {
+    display: flex;
+    gap: 7px;
+    margin-bottom: 25px;
+}
 
-        input,
-        textarea,
-        select {
-            width: 100%;
-            padding: 14px;
-            border: 1px solid #d3e2f2;
-            border-radius: 12px;
-            outline: none;
-            font-size: 15px;
-            background: white;
-        }
+.progress div {
+    height: 5px;
+    flex: 1;
+    background: #dfe4ec;
+    border-radius: 10px;
+}
 
-        input:focus,
-        textarea:focus,
-        select:focus {
-            border-color: #0878ed;
-        }
+.progress div.active {
+    background: #0d6efd;
+}
 
-        textarea {
-            min-height: 130px;
-            resize: vertical;
-        }
+.photo-box {
+    border: 2px dashed #b9c3d2;
+    border-radius: 15px;
+    padding: 35px 20px;
+    text-align: center;
+    cursor: pointer;
+}
 
-        .photo-box {
-            border: 2px dashed #8fc5f7;
-            border-radius: 18px;
-            padding: 35px 20px;
-            text-align: center;
-            background: #f3f9ff;
-        }
+.photo-box input {
+    display: none;
+}
 
-        .photo-box .icon {
-            font-size: 50px;
-            margin-bottom: 10px;
-        }
+.photo-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
 
-        .photo-box input {
-            border: none;
-            background: transparent;
-        }
+.photo-preview img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 10px;
+}
 
-        .selected-photos {
-            margin-top: 15px;
-            color: #52667a;
-            font-size: 14px;
-        }
+.summary {
+    background: #f5f7fa;
+    border-radius: 12px;
+    padding: 18px;
+    line-height: 1.8;
+}
 
-        .required {
-            color: #e63946;
-        }
+.success {
+    text-align: center;
+    display: none;
+}
 
-        .optional {
-            color: #718096;
-            font-weight: normal;
-            font-size: 13px;
-        }
+.success h2 {
+    color: #198754;
+    margin-bottom: 10px;
+}
 
-        .fee {
-            background: #eaf5ff;
-            border-radius: 18px;
-            padding: 22px;
-            margin-top: 25px;
-            text-align: center;
-        }
+.error {
+    background: #ffe8e8;
+    color: #b42318;
+    padding: 12px;
+    border-radius: 10px;
+    margin-top: 15px;
+    display: none;
+}
 
-        .fee small {
-            color: #627d98;
-        }
+@media(max-width:600px) {
+    .card {
+        padding: 18px;
+    }
 
-        .fee strong {
-            display: block;
-            font-size: 32px;
-            color: #0878ed;
-            margin-top: 8px;
-        }
-
-        .buttons {
-            display: flex;
-            justify-content: space-between;
-            gap: 15px;
-            margin-top: 30px;
-        }
-
-        button {
-            border: none;
-            border-radius: 12px;
-            padding: 14px 22px;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        button:disabled {
-            opacity: .6;
-            cursor: not-allowed;
-        }
-
-        .back {
-            background: #e5eef8;
-            color: #31526e;
-        }
-
-        .next,
-        .publish {
-            background: linear-gradient(135deg, #0757c9, #168cff);
-            color: white;
-            margin-left: auto;
-        }
-
-        .preview {
-            background: #f6faff;
-            border-radius: 18px;
-            padding: 20px;
-            margin-top: 20px;
-        }
-
-        .preview-row {
-            padding: 12px 0;
-            border-bottom: 1px solid #dce8f3;
-        }
-
-        .preview-row:last-child {
-            border-bottom: none;
-        }
-
-        .preview-label {
-            color: #718096;
-            font-size: 13px;
-            margin-bottom: 4px;
-        }
-
-        .whatsapp-note {
-            background: #eafaf0;
-            color: #24613b;
-            padding: 15px;
-            border-radius: 12px;
-            margin-top: 15px;
-            line-height: 1.5;
-        }
-
-        .success {
-            display: none;
-            text-align: center;
-            padding: 30px 10px;
-        }
-
-        .success .success-icon {
-            font-size: 60px;
-            margin-bottom: 15px;
-        }
-
-        .success h2 {
-            color: #15803d;
-            margin-bottom: 10px;
-        }
-
-        .success p {
-            color: #627d98;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        .success a {
-            display: inline-block;
-            background: #0878ed;
-            color: white;
-            padding: 13px 20px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .error-message {
-            display: none;
-            background: #fee2e2;
-            color: #991b1b;
-            padding: 14px;
-            border-radius: 12px;
-            margin-top: 15px;
-            line-height: 1.5;
-        }
-
-        @media(max-width:600px) {
-            .container {
-                margin: 25px auto;
-            }
-
-            .card {
-                padding: 22px;
-            }
-
-            .heading h1 {
-                font-size: 28px;
-            }
-
-            .progress div {
-                width: 30px;
-                height: 30px;
-            }
-        }
-    </style>
+    header {
+        padding: 15px;
+    }
+}
+</style>
 </head>
 
 <body>
 
 <header>
-    <div class="logo">🔵 MaraMarket</div>
-    <a href="index.html">← Back Home</a>
+    <div class="logo">MaraMarket</div>
+    <a href="index.html" class="back">← Home</a>
 </header>
-
 
 <div class="container">
 
-    <div class="heading">
-        <h1>Sell an Item</h1>
-        <p>Reach buyers on MaraMarket</p>
-    </div>
-
-
-    <div class="login-warning" id="loginWarning">
-        🔐 You need to be logged in before you can sell an item.
-        <br><br>
-        <a href="login.html">Sign in to MaraMarket</a>
-    </div>
-
-
-    <div class="progress" id="progress">
-
-        <div class="active" id="p1">1</div>
-        <div id="p2">2</div>
-        <div id="p3">3</div>
-        <div id="p4">4</div>
-
-    </div>
-
-
-    <div class="card" id="sellCard">
-
-        <!-- STEP 1 -->
-
-        <div class="step active" id="step1">
-
-            <h2>📸 Add Photos</h2>
-
-            <p class="step-description">
-                Good photos help buyers understand what you're selling.
-            </p>
-
-            <div class="photo-box">
-
-                <div class="icon">📷</div>
-
-                <strong>Add up to 10 photos</strong>
-
-                <p style="margin:10px 0;color:#718096;">
-                    Choose clear pictures of your item.
-                </p>
-
-                <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    id="photos"
-                >
-
-                <div class="selected-photos" id="selectedPhotos">
-                    No photos selected.
-                </div>
-
-            </div>
-
-
-            <div class="buttons">
-
-                <button
-                    class="next"
-                    onclick="nextStep(1)"
-                >
-                    Continue →
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <!-- STEP 2 -->
-
-        <div class="step" id="step2">
-
-            <h2>📝 Item Details</h2>
-
-            <p class="step-description">
-                Tell buyers about the item you're selling.
-            </p>
-
-
-            <label>
-                Item title
-                <span class="required">*</span>
-            </label>
-
-            <input
-                type="text"
-                id="title"
-                placeholder="Example: iPhone 15 Pro Max"
-            >
-
-
-            <label>
-                Category
-                <span class="required">*</span>
-            </label>
-
-            <select id="category">
-
-                <option value="">Select a category</option>
-
-                <option>Phones</option>
-                <option>Electronics</option>
-                <option>Fashion</option>
-                <option>Vehicles</option>
-                <option>Property</option>
-                <option>Gaming</option>
-                <option>Beauty</option>
-                <option>Home & Garden</option>
-                <option>Sports</option>
-                <option>Services</option>
-                <option>Other</option>
-
-            </select>
-
-
-            <label>
-                Condition
-                <span class="required">*</span>
-            </label>
-
-            <select id="condition">
-
-                <option value="">Select condition</option>
-
-                <option>New</option>
-                <option>Used</option>
-                <option>Refurbished</option>
-
-            </select>
-
-
-            <label>
-                Brand
-                <span class="optional">(optional)</span>
-            </label>
-
-            <input
-                type="text"
-                id="brand"
-                placeholder="Example: Apple"
-            >
-
-
-            <label>
-                Model
-                <span class="optional">(optional)</span>
-            </label>
-
-            <input
-                type="text"
-                id="model"
-                placeholder="Example: iPhone 15 Pro Max"
-            >
-
-
-            <label>
-                Price (₦)
-                <span class="required">*</span>
-            </label>
-
-            <input
-                type="number"
-                id="price"
-                placeholder="Example: 250000"
-                min="0"
-            >
-
-
-            <label>
-                Description
-                <span class="required">*</span>
-            </label>
-
-            <textarea
-                id="description"
-                placeholder="Describe your item, its condition, features, etc."
-            ></textarea>
-
-
-            <div class="buttons">
-
-                <button
-                    class="back"
-                    onclick="previousStep(2)"
-                >
-                    ← Back
-                </button>
-
-                <button
-                    class="next"
-                    onclick="nextStep(2)"
-                >
-                    Continue →
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <!-- STEP 3 -->
-
-        <div class="step" id="step3">
-
-            <h2>📍 Location & Contact</h2>
-
-            <p class="step-description">
-                Give buyers enough information to contact you.
-            </p>
-
-
-            <label>
-                State
-                <span class="required">*</span>
-            </label>
-
-            <select id="state">
-
-                <option value="">Select state</option>
-
-                <option>Abia</option>
-                <option>Adamawa</option>
-                <option>Akwa Ibom</option>
-                <option>Anambra</option>
-                <option>Bauchi</option>
-                <option>Bayelsa</option>
-                <option>Benue</option>
-                <option>Borno</option>
-                <option>Cross River</option>
-                <option>Delta</option>
-                <option>Ebonyi</option>
-                <option>Edo</option>
-                <option>Ekiti</option>
-                <option>Enugu</option>
-                <option>FCT Abuja</option>
-                <option>Gombe</option>
-                <option>Imo</option>
-                <option>Jigawa</option>
-                <option>Kaduna</option>
-                <option>Kano</option>
-                <option>Katsina</option>
-                <option>Kebbi</option>
-                <option>Kogi</option>
-                <option>Kwara</option>
-                <option>Lagos</option>
-                <option>Nasarawa</option>
-                <option>Niger</option>
-                <option>Ogun</option>
-                <option>Ondo</option>
-                <option>Osun</option>
-                <option>Oyo</option>
-                <option>Plateau</option>
-                <option>Rivers</option>
-                <option>Sokoto</option>
-                <option>Taraba</option>
-                <option>Yobe</option>
-                <option>Zamfara</option>
-
-            </select>
-
-
-            <label>
-                City
-                <span class="required">*</span>
-            </label>
-
-            <input
-                type="text"
-                id="city"
-                placeholder="Example: Ikeja"
-            >
-
-
-            <label>
-                Area
-                <span class="required">*</span>
-            </label>
-
-            <input
-                type="text"
-                id="area"
-                placeholder="Example: Allen Avenue"
-            >
-
-
-            <label>
-                WhatsApp Number
-                <span class="required">*</span>
-            </label>
-
-            <input
-                type="tel"
-                id="whatsapp"
-                placeholder="08012345678"
-            >
-
-
-            <div class="whatsapp-note">
-                🟢 A WhatsApp number is required because buyers
-                need a way to contact sellers.
-            </div>
-
-
-            <label>
-                Phone
-                <span class="optional">(optional)</span>
-            </label>
-
-            <input
-                type="tel"
-                id="phone"
-                placeholder="08012345678"
-            >
-
-
-            <label>
-                Instagram
-                <span class="optional">(optional)</span>
-            </label>
-
-            <input
-                type="text"
-                id="instagram"
-                placeholder="@yourusername"
-            >
-
-
-            <label>
-                Telegram
-                <span class="optional">(optional)</span>
-            </label>
-
-            <input
-                type="text"
-                id="telegram"
-                placeholder="@yourusername"
-            >
-
-
-            <label>
-                TikTok
-                <span class="optional">(optional)</span>
-            </label>
-
-            <input
-                type="text"
-                id="tiktok"
-                placeholder="@yourusername"
-            >
-
-
-            <div class="buttons">
-
-                <button
-                    class="back"
-                    onclick="previousStep(3)"
-                >
-                    ← Back
-                </button>
-
-                <button
-                    class="next"
-                    onclick="nextStep(3)"
-                >
-                    Preview →
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <!-- STEP 4 -->
-
-        <div class="step" id="step4">
-
-            <h2>👀 Preview Your Listing</h2>
-
-            <p class="step-description">
-                Check everything before continuing to payment.
-            </p>
-
-
-            <div class="preview">
-
-                <div class="preview-row">
-                    <div class="preview-label">Item</div>
-                    <strong id="previewTitle">—</strong>
-                </div>
-
-                <div class="preview-row">
-                    <div class="preview-label">Category</div>
-                    <span id="previewCategory">—</span>
-                </div>
-
-                <div class="preview-row">
-                    <div class="preview-label">Condition</div>
-                    <span id="previewCondition">—</span>
-                </div>
-
-                <div class="preview-row">
-                    <div class="preview-label">Brand</div>
-                    <span id="previewBrand">—</span>
-                </div>
-
-                <div class="preview-row">
-                    <div class="preview-label">Model</div>
-                    <span id="previewModel">—</span>
-                </div>
-
-                <div class="preview-row">
-                    <div class="preview-label">Price</div>
-                    <strong id="previewPrice">—</strong>
-                </div>
-
-                <div class="preview-row">
-                    <div class="preview-label">Location</div>
-                    <span id="previewLocation">—</span>
-                </div>
-
-                <div class="preview-row">
-                    <div class="preview-label">WhatsApp</div>
-                    <span id="previewWhatsapp">—</span>
-                </div>
-
-                <div class="preview-row">
-                    <div class="preview-label">Photos</div>
-                    <span id="previewPhotos">—</span>
-                </div>
-
-            </div>
-
-
-            <div class="fee">
-
-                <small>
-                    Marketplace listing fee
-                </small>
-
-                <strong>
-                    ₦1,000
-                </strong>
-
-                <p style="margin-top:8px;color:#52667a;">
-                    Your listing will be saved as pending payment.
-                    It will not be published until payment is verified.
-                </p>
-
-            </div>
-
-
-            <div
-                class="error-message"
-                id="errorMessage"
-            ></div>
-
-
-            <div class="buttons">
-
-                <button
-                    class="back"
-                    onclick="previousStep(4)"
-                    id="backButton"
-                >
-                    ← Edit
-                </button>
-
-                <button
-                    class="publish"
-                    onclick="saveListing()"
-                    id="publishButton"
-                >
-                    Continue to Payment →
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <!-- SUCCESS -->
-
-        <div
-            class="success"
-            id="successScreen"
-        >
-
-            <div class="success-icon">
-                ✅
-            </div>
-
-            <h2>
-                Listing Saved!
-            </h2>
-
-            <p>
-                Your listing has been saved successfully
-                and is currently waiting for payment verification.
-            </p>
-
-            <a href="index.html">
-                Return to MaraMarket
-            </a>
-
-        </div>
-
+<div class="card">
+
+<h1>Sell on MaraMarket</h1>
+<p class="subtitle">Create a listing and reach buyers across Nigeria.</p>
+
+<div class="progress">
+    <div id="p1" class="active"></div>
+    <div id="p2"></div>
+    <div id="p3"></div>
+    <div id="p4"></div>
+</div>
+
+<!-- STEP 1 -->
+<div class="step active" id="step1">
+
+    <h2>1. Photos</h2>
+
+    <label class="photo-box">
+        <input type="file" id="photos" accept="image/*" multiple>
+        <strong>📷 Add photos</strong>
+        <br>
+        <small>You can select up to 10 photos.</small>
+    </label>
+
+    <div class="photo-preview" id="photoPreview"></div>
+
+    <div class="buttons">
+        <button class="next" onclick="nextStep(2)">
+            Continue →
+        </button>
     </div>
 
 </div>
 
+<!-- STEP 2 -->
+<div class="step" id="step2">
+
+    <h2>2. Item Details</h2>
+
+    <label>Item title *</label>
+    <input id="title" type="text" placeholder="e.g. iPhone 15 Pro Max">
+
+    <label>Category *</label>
+    <select id="category">
+        <option value="">Select category</option>
+        <option>Phones</option>
+        <option>Electronics</option>
+        <option>Fashion</option>
+        <option>Vehicles</option>
+        <option>Property</option>
+        <option>Gaming</option>
+        <option>Beauty</option>
+        <option>Home & Garden</option>
+        <option>Sports</option>
+        <option>Services</option>
+        <option>Other</option>
+    </select>
+
+    <label>Condition *</label>
+    <select id="condition">
+        <option value="">Select condition</option>
+        <option>Brand New</option>
+        <option>Like New</option>
+        <option>Used</option>
+        <option>Fairly Used</option>
+        <option>Refurbished</option>
+    </select>
+
+    <label>Brand</label>
+    <input id="brand" type="text" placeholder="e.g. Apple">
+
+    <label>Model</label>
+    <input id="model" type="text" placeholder="e.g. iPhone 15 Pro Max">
+
+    <label>Price (₦) *</label>
+    <input id="price" type="number" min="0" placeholder="e.g. 850000">
+
+    <label>Description *</label>
+    <textarea id="description"
+        placeholder="Describe your item, including important details buyers should know."></textarea>
+
+    <div class="buttons">
+        <button class="backBtn" onclick="nextStep(1)">← Back</button>
+        <button class="next" onclick="nextStep(3)">Continue →</button>
+    </div>
+
+</div>
+
+<!-- STEP 3 -->
+<div class="step" id="step3">
+
+    <h2>3. Location & Contact</h2>
+
+    <label>State *</label>
+    <input id="state" type="text" placeholder="e.g. Lagos">
+
+    <label>City *</label>
+    <input id="city" type="text" placeholder="e.g. Ikeja">
+
+    <label>Area</label>
+    <input id="area" type="text" placeholder="e.g. Allen Avenue">
+
+    <label>WhatsApp *</label>
+    <input id="whatsapp" type="text" placeholder="e.g. 08012345678">
+
+    <label>Phone</label>
+    <input id="phone" type="text" placeholder="e.g. 08012345678">
+
+    <label>Instagram</label>
+    <input id="instagram" type="text" placeholder="@username">
+
+    <label>Telegram</label>
+    <input id="telegram" type="text" placeholder="@username">
+
+    <label>TikTok</label>
+    <input id="tiktok" type="text" placeholder="@username">
+
+    <div class="buttons">
+        <button class="backBtn" onclick="nextStep(2)">← Back</button>
+        <button class="next" onclick="preparePreview()">Continue →</button>
+    </div>
+
+</div>
+
+<!-- STEP 4 -->
+<div class="step" id="step4">
+
+    <h2>4. Preview</h2>
+
+    <div class="summary" id="summary"></div>
+
+    <div id="errorBox" class="error"></div>
+
+    <div class="buttons">
+        <button class="backBtn" onclick="nextStep(3)">← Edit</button>
+        <button class="save" id="saveButton" onclick="saveListing()">
+            Continue to Payment →
+        </button>
+    </div>
+
+</div>
+
+<!-- SUCCESS -->
+<div class="success" id="successBox">
+
+    <h2>✓ Listing Saved!</h2>
+
+    <p>
+        Your listing has been submitted successfully and is currently
+        waiting for payment verification.
+    </p>
+
+    <br>
+
+    <button class="next" onclick="window.location.href='account.html'">
+        Go to My Account
+    </button>
+
+</div>
+
+</div>
+</div>
 
 <script>
 
-    /* =========================================
-       SUPABASE
-    ========================================= */
+const SUPABASE_URL =
+    "https://hakjsjmexinuiwhxejva.supabase.co";
 
-    const SUPABASE_URL =
-        "https://hakjsjmexinuiwhxejva.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_OjO3jp9ZlV0N2WHHBddN8g_rryvMoAL";
 
-    const SUPABASE_PUBLISHABLE_KEY =
-        "sb_publishable_OjO3jp9ZlV0N2WHHBddN8g_rryvMoAL";
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
 
-
-    const supabaseClient =
-        window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_PUBLISHABLE_KEY
-        );
+let currentUser = null;
+let selectedPhotos = [];
 
 
-    let currentUser = null;
-    let currentStep = 1;
+/* CHECK LOGIN */
+async function checkLogin() {
 
+    const { data, error } =
+        await supabaseClient.auth.getSession();
 
-    /* =========================================
-       CHECK LOGIN
-    ========================================= */
-
-    async function checkLogin() {
-
-        const {
-            data,
-            error
-        } = await supabaseClient.auth.getSession();
-
-
-        if (error) {
-
-            console.error(
-                "Session error:",
-                error
-            );
-
-            showLoginWarning();
-
-            return false;
-        }
-
-
-        if (
-            !data.session ||
-            !data.session.user
-        ) {
-
-            showLoginWarning();
-
-            return false;
-        }
-
-
-        currentUser =
-            data.session.user;
-
-        return true;
+    if (error || !data.session) {
+        window.location.href = "login.html";
+        return;
     }
 
-
-    function showLoginWarning() {
-
-        document.getElementById(
-            "loginWarning"
-        ).style.display = "block";
+    currentUser = data.session.user;
+}
 
 
-        document.getElementById(
-            "progress"
-        ).style.display = "none";
+/* PHOTOS */
+document.getElementById("photos").addEventListener("change", function(e) {
+
+    selectedPhotos =
+        Array.from(e.target.files).slice(0, 10);
+
+    const preview =
+        document.getElementById("photoPreview");
+
+    preview.innerHTML = "";
+
+    selectedPhotos.forEach(file => {
+
+        const reader = new FileReader();
+
+        reader.onload = function(event) {
+
+            const img =
+                document.createElement("img");
+
+            img.src = event.target.result;
+
+            preview.appendChild(img);
+        };
+
+        reader.readAsDataURL(file);
+    });
+});
 
 
-        document.getElementById(
-            "sellCard"
-        ).style.display = "none";
+/* STEP NAVIGATION */
+function nextStep(number) {
 
-    }
+    document.querySelectorAll(".step")
+        .forEach(step => step.classList.remove("active"));
 
+    document.getElementById("step" + number)
+        .classList.add("active");
 
-    /* =========================================
-       SHOW STEP
-    ========================================= */
+    for (let i = 1; i <= 4; i++) {
 
-    function showStep(step) {
+        const progress =
+            document.getElementById("p" + i);
 
-        document
-            .querySelectorAll(".step")
-            .forEach(function(element) {
-
-                element.classList.remove(
-                    "active"
-                );
-
-            });
-
-
-        document
-            .getElementById("step" + step)
-            .classList.add("active");
-
-
-        document
-            .querySelectorAll(".progress div")
-            .forEach(function(element) {
-
-                element.classList.remove(
-                    "active"
-                );
-
-            });
-
-
-        for (
-            let i = 1;
-            i <= step;
-            i++
-        ) {
-
-            document
-                .getElementById("p" + i)
-                .classList.add("active");
-
+        if (i <= number) {
+            progress.classList.add("active");
+        } else {
+            progress.classList.remove("active");
         }
-
-
-        currentStep = step;
-
-
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
-
     }
 
-
-    /* =========================================
-       NEXT STEP
-    ========================================= */
-
-    function nextStep(step) {
-
-        if (step === 1) {
-
-            const photos =
-                document.getElementById(
-                    "photos"
-                );
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
 
 
-            if (
-                !photos.files ||
-                photos.files.length === 0
-            ) {
+/* VALIDATE AND SHOW PREVIEW */
+function preparePreview() {
 
-                alert(
-                    "Please add at least one photo."
-                );
+    const title =
+        document.getElementById("title").value.trim();
 
-                return;
-            }
+    const category =
+        document.getElementById("category").value;
 
+    const condition =
+        document.getElementById("condition").value;
 
-            if (photos.files.length > 10) {
+    const price =
+        document.getElementById("price").value;
 
-                alert(
-                    "You can upload a maximum of 10 photos."
-                );
+    const description =
+        document.getElementById("description").value.trim();
 
-                return;
-            }
+    const state =
+        document.getElementById("state").value.trim();
 
-        }
+    const city =
+        document.getElementById("city").value.trim();
 
+    const whatsapp =
+        document.getElementById("whatsapp").value.trim();
 
-        if (step === 2) {
+    if (!title ||
+        !category ||
+        !condition ||
+        !price ||
+        !description ||
+        !state ||
+        !city ||
+        !whatsapp) {
 
-            const title =
-                document.getElementById(
-                    "title"
-                ).value.trim();
-
-
-            const category =
-                document.getElementById(
-                    "category"
-                ).value;
-
-
-            const condition =
-                document.getElementById(
-                    "condition"
-                ).value;
-
-
-            const price =
-                document.getElementById(
-                    "price"
-                ).value;
-
-
-            const description =
-                document.getElementById(
-                    "description"
-                ).value.trim();
-
-
-            if (
-                !title ||
-                !category ||
-                !condition ||
-                !price ||
-                !description
-            ) {
-
-                alert(
-                    "Please complete all required item details."
-                );
-
-                return;
-            }
-
-
-            if (Number(price) <= 0) {
-
-                alert(
-                    "Please enter a valid price."
-                );
-
-                return;
-            }
-
-        }
-
-
-        if (step === 3) {
-
-            const state =
-                document.getElementById(
-                    "state"
-                ).value;
-
-
-            const city =
-                document.getElementById(
-                    "city"
-                ).value.trim();
-
-
-            const area =
-                document.getElementById(
-                    "area"
-                ).value.trim();
-
-
-            const whatsapp =
-                document.getElementById(
-                    "whatsapp"
-                ).value.trim();
-
-
-            if (
-                !state ||
-                !city ||
-                !area ||
-                !whatsapp
-            ) {
-
-                alert(
-                    "State, city, area and WhatsApp number are required."
-                );
-
-                return;
-            }
-
-
-            updatePreview();
-
-        }
-
-
-        showStep(step + 1);
-
+        alert("Please fill in all required fields.");
+        return;
     }
 
+    const brand =
+        document.getElementById("brand").value.trim();
 
-    /* =========================================
-       PREVIOUS STEP
-    ========================================= */
+    const model =
+        document.getElementById("model").value.trim();
 
-    function previousStep(step) {
+    const area =
+        document.getElementById("area").value.trim();
 
-        showStep(step - 1);
+    const phone =
+        document.getElementById("phone").value.trim();
 
+    const instagram =
+        document.getElementById("instagram").value.trim();
+
+    const telegram =
+        document.getElementById("telegram").value.trim();
+
+    const tiktok =
+        document.getElementById("tiktok").value.trim();
+
+    document.getElementById("summary").innerHTML = `
+
+        <strong>Title:</strong> ${escapeHtml(title)}<br>
+
+        <strong>Category:</strong> ${escapeHtml(category)}<br>
+
+        <strong>Condition:</strong> ${escapeHtml(condition)}<br>
+
+        <strong>Brand:</strong> ${escapeHtml(brand || "Not specified")}<br>
+
+        <strong>Model:</strong> ${escapeHtml(model || "Not specified")}<br>
+
+        <strong>Price:</strong> ₦${Number(price).toLocaleString()}<br>
+
+        <strong>Description:</strong><br>
+        ${escapeHtml(description)}<br><br>
+
+        <strong>Location:</strong>
+        ${escapeHtml(area ? area + ", " : "")}
+        ${escapeHtml(city)}, ${escapeHtml(state)}<br>
+
+        <strong>WhatsApp:</strong> ${escapeHtml(whatsapp)}<br>
+
+        <strong>Phone:</strong> ${escapeHtml(phone || "Not specified")}<br>
+
+        <strong>Instagram:</strong> ${escapeHtml(instagram || "Not specified")}<br>
+
+        <strong>Telegram:</strong> ${escapeHtml(telegram || "Not specified")}<br>
+
+        <strong>TikTok:</strong> ${escapeHtml(tiktok || "Not specified")}<br>
+
+        <strong>Photos:</strong> ${selectedPhotos.length}
+    `;
+
+    nextStep(4);
+}
+
+
+/* SAVE LISTING */
+async function saveListing() {
+
+    const button =
+        document.getElementById("saveButton");
+
+    const errorBox =
+        document.getElementById("errorBox");
+
+    errorBox.style.display = "none";
+
+    if (!currentUser) {
+
+        window.location.href = "login.html";
+        return;
     }
 
+    button.disabled = true;
+    button.textContent = "Saving...";
 
-    /* =========================================
-       UPDATE PHOTO COUNT
-    ========================================= */
+    const title =
+        document.getElementById("title").value.trim();
 
-    document
-        .getElementById("photos")
-        .addEventListener(
-            "change",
-            function() {
+    const description =
+        document.getElementById("description").value.trim();
 
-                const count =
-                    this.files.length;
+    const price =
+        Number(document.getElementById("price").value);
 
+    const condition =
+        document.getElementById("condition").value;
 
-                const display =
-                    document.getElementById(
-                        "selectedPhotos"
-                    );
+    const brand =
+        document.getElementById("brand").value.trim();
 
+    const model =
+        document.getElementById("model").value.trim();
 
-                if (count === 0) {
+    const state =
+        document.getElementById("state").value.trim();
 
-                    display.textContent =
-                        "No photos selected.";
+    const city =
+        document.getElementById("city").value.trim();
 
-                } else {
+    const area =
+        document.getElementById("area").value.trim();
 
-                    display.textContent =
-                        count +
-                        " photo" +
-                        (count === 1 ? "" : "s") +
-                        " selected.";
+    const whatsapp =
+        document.getElementById("whatsapp").value.trim();
 
-                }
+    const instagram =
+        document.getElementById("instagram").value.trim();
 
-            }
-        );
+    const telegram =
+        document.getElementById("telegram").value.trim();
 
+    const tiktok =
+        document.getElementById("tiktok").value.trim();
 
-    /* =========================================
-       PREVIEW
-    ========================================= */
-
-    function updatePreview() {
-
-        const photos =
-            document.getElementById(
-                "photos"
-            ).files;
+    const phone =
+        document.getElementById("phone").value.trim();
 
 
-        document.getElementById(
-            "previewTitle"
-        ).textContent =
-            document.getElementById(
-                "title"
-            ).value;
+    /*
+       IMPORTANT:
+       Your database allows:
+       pending
+       active
+       sold
+       expired
+       rejected
+       deleted
+
+       Therefore the new listing uses:
+       status: "pending"
+    */
+
+    const listingData = {
+
+        seller_id: currentUser.id,
+
+        title: title,
+
+        description: description,
+
+        price: price,
+
+        condition: condition,
+
+        brand: brand || null,
+
+        model: model || null,
+
+        state: state,
+
+        city: city,
+
+        area: area,
+
+        whatsapp: whatsapp,
+
+        instagram: instagram || null,
+
+        telegram: telegram || null,
+
+        tiktok: tiktok || null,
+
+        phone: phone || null,
+
+        status: "pending",
+
+        payment_status: "pending",
+
+        listing_fee: 1000,
+
+        views: 0,
+
+        favorites_count: 0,
+
+        image_urls: []
+
+    };
 
 
-        document.getElementById(
-            "previewCategory"
-        ).textContent =
-            document.getElementById(
-                "category"
-            ).value;
+    const { data, error } =
+        await supabaseClient
+            .from("listings")
+            .insert(listingData)
+            .select()
+            .single();
 
 
-        document.getElementById(
-            "previewCondition"
-        ).textContent =
-            document.getElementById(
-                "condition"
-            ).value;
+    if (error) {
 
+        console.error(error);
 
-        document.getElementById(
-            "previewBrand"
-        ).textContent =
-            document.getElementById(
-                "brand"
-            ).value || "Not specified";
+        errorBox.textContent =
+            "Could not save your listing: " +
+            error.message;
 
+        errorBox.style.display = "block";
 
-        document.getElementById(
-            "previewModel"
-        ).textContent =
-            document.getElementById(
-                "model"
-            ).value || "Not specified";
-
-
-        document.getElementById(
-            "previewPrice"
-        ).textContent =
-            "₦" +
-            Number(
-                document.getElementById(
-                    "price"
-                ).value
-            ).toLocaleString();
-
-
-        document.getElementById(
-            "previewLocation"
-        ).textContent =
-            document.getElementById(
-                "state"
-            ).value +
-            " — " +
-            document.getElementById(
-                "city"
-            ).value +
-            " — " +
-            document.getElementById(
-                "area"
-            ).value;
-
-
-        document.getElementById(
-            "previewWhatsapp"
-        ).textContent =
-            document.getElementById(
-                "whatsapp"
-            ).value;
-
-
-        document.getElementById(
-            "previewPhotos"
-        ).textContent =
-            photos.length +
-            " photo" +
-            (photos.length === 1 ? "" : "s");
-
-    }
-
-
-    /* =========================================
-       SAVE LISTING
-    ========================================= */
-
-    async function saveListing() {
-
-        const button =
-            document.getElementById(
-                "publishButton"
-            );
-
-
-        const errorBox =
-            document.getElementById(
-                "errorMessage"
-            );
-
-
-        errorBox.style.display =
-            "none";
-
-
-        button.disabled = true;
+        button.disabled = false;
 
         button.textContent =
-            "Saving listing...";
+            "Continue to Payment →";
 
-
-        try {
-
-            const loggedIn =
-                await checkLogin();
-
-
-            if (!loggedIn) {
-
-                button.disabled = false;
-
-                button.textContent =
-                    "Continue to Payment →";
-
-                return;
-
-            }
-
-
-            const title =
-                document.getElementById(
-                    "title"
-                ).value.trim();
-
-
-            const category =
-                document.getElementById(
-                    "category"
-                ).value;
-
-
-            const condition =
-                document.getElementById(
-                    "condition"
-                ).value;
-
-
-            const brand =
-                document.getElementById(
-                    "brand"
-                ).value.trim();
-
-
-            const model =
-                document.getElementById(
-                    "model"
-                ).value.trim();
-
-
-            const price =
-                Number(
-                    document.getElementById(
-                        "price"
-                    ).value
-                );
-
-
-            const description =
-                document.getElementById(
-                    "description"
-                ).value.trim();
-
-
-            const state =
-                document.getElementById(
-                    "state"
-                ).value;
-
-
-            const city =
-                document.getElementById(
-                    "city"
-                ).value.trim();
-
-
-            const area =
-                document.getElementById(
-                    "area"
-                ).value.trim();
-
-
-            const whatsapp =
-                document.getElementById(
-                    "whatsapp"
-                ).value.trim();
-
-
-            const phone =
-                document.getElementById(
-                    "phone"
-                ).value.trim();
-
-
-            const instagram =
-                document.getElementById(
-                    "instagram"
-                ).value.trim();
-
-
-            const telegram =
-                document.getElementById(
-                    "telegram"
-                ).value.trim();
-
-
-            const tiktok =
-                document.getElementById(
-                    "tiktok"
-                ).value.trim();
-
-
-            /*
-             * We intentionally leave category_id
-             * empty for now because your current
-             * form stores category names while your
-             * database uses category_id.
-             *
-             * We'll connect the categories table
-             * properly when we build browse.html.
-             */
-
-
-            const listingData = {
-
-                seller_id:
-                    currentUser.id,
-
-                title:
-                    title,
-
-                description:
-                    description,
-
-                price:
-                    price,
-
-                condition:
-                    condition,
-
-                brand:
-                    brand || null,
-
-                model:
-                    model || null,
-
-                state:
-                    state,
-
-                city:
-                    city,
-
-                area:
-                    area,
-
-                whatsapp:
-                    whatsapp,
-
-                instagram:
-                    instagram || null,
-
-                telegram:
-                    telegram || null,
-
-                tiktok:
-                    tiktok || null,
-
-                phone:
-                    phone || null,
-
-                status:
-                    "pending",
-
-                payment_status:
-                    "pending",
-
-                listing_fee:
-                    1000,
-
-                views:
-                    0,
-
-                favorites_count:
-                    0,
-
-                image_urls:
-                    []
-
-            };
-
-
-            const {
-                data,
-                error
-            } = await supabaseClient
-                .from("listings")
-                .insert(
-                    listingData
-                )
-                .select()
-                .single();
-
-
-            if (error) {
-
-                console.error(
-                    "Listing insert error:",
-                    error
-                );
-
-                throw new Error(
-                    error.message
-                );
-
-            }
-
-
-            console.log(
-                "Listing created:",
-                data
-            );
-
-
-            /*
-             * Payment integration comes next.
-             *
-             * For now the listing is safely stored
-             * as pending_payment.
-             */
-
-
-            document
-                .querySelectorAll(".step")
-                .forEach(function(element) {
-
-                    element.classList.remove(
-                        "active"
-                    );
-
-                });
-
-
-            document.getElementById(
-                "progress"
-            ).style.display = "none";
-
-
-            document.getElementById(
-                "successScreen"
-            ).style.display = "block";
-
-
-            button.disabled = false;
-
-
-        } catch (error) {
-
-            console.error(error);
-
-
-            errorBox.textContent =
-                "Could not save your listing: " +
-                error.message;
-
-
-            errorBox.style.display =
-                "block";
-
-
-            button.disabled = false;
-
-            button.textContent =
-                "Continue to Payment →";
-
-        }
-
+        return;
     }
 
 
-    /* =========================================
-       INITIALIZE
-    ========================================= */
+    console.log("Listing created:", data);
 
-    document.addEventListener(
-        "DOMContentLoaded",
-        async function() {
+    document.querySelectorAll(".step")
+        .forEach(step =>
+            step.classList.remove("active")
+        );
 
-            await checkLogin();
+    document.querySelector(".progress")
+        .style.display = "none";
 
-        }
-    );
+    document.querySelector("h1")
+        .style.display = "none";
+
+    document.querySelector(".subtitle")
+        .style.display = "none";
+
+    document.getElementById("successBox")
+        .style.display = "block";
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+
+/* HTML ESCAPE */
+function escapeHtml(text) {
+
+    return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+/* START */
+checkLogin();
 
 </script>
 
