@@ -965,7 +965,50 @@
 
         }
     );
+// ===============================
+// MARA MARKET LOGIN DETECTION
+// ===============================
 
+async function checkLoginStatus() {
+
+    try {
+
+        const {
+            data: { session },
+            error
+        } = await supabaseClient.auth.getSession();
+
+        if (error) {
+            console.error("Session error:", error);
+            return;
+        }
+
+        const accountButton =
+            document.getElementById("fm3hhb");
+
+        if (!accountButton) return;
+
+        if (session && session.user) {
+
+            accountButton.innerHTML =
+                '<a href="account.html" class="sell-button">My Account</a>';
+
+        } else {
+
+            accountButton.innerHTML =
+                '<a href="signup.html" class="sell-button">Create Account</a>';
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Login detection error:",
+            error
+        );
+    }
+}
+
+checkLoginStatus();
 </script>
 
 </body>
