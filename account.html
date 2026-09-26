@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>MaraMarket — My Account</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+            background:
+                radial-gradient(
+                    circle at top left,
+                    #dbeafe 0%,
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at bottom right,
+                    #bfdbfe 0%,
+                    transparent 35%
+                ),
+                #f4f8ff;
+            color: #172033;
+        }
+
+        header {
+            padding: 18px 5%;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(18,97,232,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            text-decoration: none;
+            color: #1261e8;
+            font-size: 24px;
+            font-weight: 900;
+        }
+
+        .back {
+            text-decoration: none;
+            color: #1261e8;
+            font-weight: 700;
+        }
+
+        main {
+            width: 90%;
+            max-width: 650px;
+            margin: 45px auto 100px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.9);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow:
+                0 20px 50px rgba(20,40,80,0.1);
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(
+                135deg,
+                #1261e8,
+                #3984ff
+            );
+            color: white;
+            font-size: 38px;
+            font-weight: 900;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .email {
+            color: #718096;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #d8e1ef;
+            border-radius: 12px;
+            outline: none;
+            background: white;
+        }
+
+        input:focus {
+            border-color: #1261e8;
+        }
+
+        .button {
+            width: 100%;
+            border: none;
+            cursor: pointer;
+            padding: 14px;
+            border-radius: 12px;
+            background: linear-gradient(
+                135deg,
+                #1261e8,
+                #3984ff
+            );
+            color: white;
+            font-weight: 800;
+            margin-top: 5px;
+        }
+
+        .logout {
+            margin-top: 12px;
+            background: #eef4ff;
+            color: #1261e8;
+        }
+
+        .status {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: 700;
+            min-height: 20px;
+        }
+
+        .links {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .links a {
+            color: #1261e8;
+            text-decoration: none;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <a href="index.html" class="logo">
+        🔵 MaraMarket
+    </a>
+
+    <a href="index.html" class="back">
+        ← Home
+    </a>
+
+</header>
+
+
+<main>
+
+    <div class="card">
+
+        <div class="profile-header">
+
+            <div class="avatar" id="avatar">
+                👤
+            </div>
+
+            <h1 id="welcomeName">
+                Loading...
+            </h1>
+
+            <p
+                class="email"
+                id="userEmail"
+            >
+                Loading...
+            </p>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="displayName">
+                Display Name
+            </label>
+
+            <input
+                id="displayName"
+                type="text"
+                placeholder="Enter your name"
+                maxlength="50"
+            >
+
+        </div>
+
+
+        <button
+            class="button"
+            type="button"
+            onclick="saveProfile()"
+        >
+            Save Changes
+        </button>
+
+
+        <button
+            class="button logout"
+            type="button"
+            onclick="logoutUser()"
+        >
+            Log Out
+        </button>
+
+
+        <div
+            class="status"
+            id="status"
+        ></div>
+
+
+        <div class="links">
+
+            <a href="index.html">
+                ← Back to MaraMarket
+            </a>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<script>
+
+    const SUPABASE_URL =
+        "https://hakjsjmexinuiwhxejva.supabase.co";
+
+    const SUPABASE_PUBLISHABLE_KEY =
+        "sb_publishable_OjO3jp9ZlV0N2WHHBddN8g_rryvMoAL";
+
+
+    const supabaseClient =
+        window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_PUBLISHABLE_KEY
+        );
+
+
+    let currentUser = null;
+
+
+    function escapeHtml(value) {
+
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+
+    async function loadAccount() {
+
+        const {
+            data: {
+                session
+            },
+            error
+        } =
+            await supabaseClient.auth.getSession();
+
+
+        if (
+            error ||
+            !session ||
+            !session.user
+        ) {
+
+            window.location.href =
+                "login.html";
+
+            return;
+
+        }
+
+
+        currentUser = session.user;
+
+
+        const email =
+            currentUser.email || "";
+
+
+        const name =
+            currentUser.user_metadata?.full_name ||
+            currentUser.user_metadata?.name ||
+            currentUser.user_metadata?.username ||
+            "MaraMarket User";
+
+
+        document.getElementById(
+            "welcomeName"
+        ).textContent =
+            "Welcome, " + name + " 👋";
+
+
+        document.getElementById(
+            "userEmail"
+        ).textContent =
+            email;
+
+
+        document.getElementById(
+            "displayName"
+        ).value =
+            name;
+
+
+        const firstLetter =
+            name.trim().charAt(0).toUpperCase();
+
+
+        document.getElementById(
+            "avatar"
+        ).textContent =
+            firstLetter || "👤";
+
+    }
+
+
+    async function saveProfile() {
+
+        if (!currentUser) {
+
+            return;
+
+        }
+
+
+        const input =
+            document.getElementById(
+                "displayName"
+            );
+
+
+        const newName =
+            input.value.trim();
+
+
+        const status =
+            document.getElementById(
+                "status"
+            );
+
+
+        if (!newName) {
+
+            status.textContent =
+                "Please enter a name.";
+
+            return;
+
+        }
+
+
+        status.textContent =
+            "Saving...";
+
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.auth.updateUser({
+
+                data: {
+                    full_name: newName
+                }
+
+            });
+
+
+        if (error) {
+
+            console.error(error);
+
+            status.textContent =
+                "Could not save your changes.";
+
+            return;
+
+        }
+
+
+        currentUser =
+            data.user;
+
+
+        document.getElementById(
+            "welcomeName"
+        ).textContent =
+            "Welcome, " +
+            newName +
+            " 👋";
+
+
+        document.getElementById(
+            "avatar"
+        ).textContent =
+            newName
+                .charAt(0)
+                .toUpperCase();
+
+
+        status.textContent =
+            "Profile updated successfully! ✓";
+
+
+        setTimeout(
+            function() {
+
+                status.textContent = "";
+
+            },
+            3000
+        );
+
+    }
+
+
+    async function logoutUser() {
+
+        const {
+            error
+        } =
+            await supabaseClient.auth.signOut();
+
+
+        if (error) {
+
+            document.getElementById(
+                "status"
+            ).textContent =
+                "Could not log out.";
+
+            return;
+
+        }
+
+
+        window.location.href =
+            "index.html";
+
+    }
+
+
+    loadAccount();
+
+</script>
+
+</body>
+</html>
